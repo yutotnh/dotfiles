@@ -1,0 +1,17 @@
+name: Install applications
+
+on: [push, pull_request, workflow_dispatch]
+
+jobs:
+  install:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Install
+        run: |
+          bash install.sh
