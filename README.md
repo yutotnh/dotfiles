@@ -1,8 +1,6 @@
 # dotfiles
 
-## セットアップ
-
-### Installation
+## Installation
 
 ```bash
 git clone https://github.com/yutotnh/dotfiles.git
