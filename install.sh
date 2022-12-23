@@ -17,4 +17,19 @@ $(brew --prefix)/opt/fzf/install --all
 # 本当はHomebrewでGitをインストールして、そこの`git-completion.bash`を使いたい
 # だけど、2022/12現在bash-completionとGit両方をbrewでインストールしようとしたらエラーが発生する
 # そのため、解決するまでは `git-completion.bash`を直接ダウンロードして利用する
-wget https://raw.githubusercontent.com/git/git/master/contrib/completion/git-completion.bash
+curl -sO https://raw.githubusercontent.com/git/git/master/contrib/completion/git-completion.bash
+
+script_directory="$(dirname "$(realpath "${BASH_SOURCE:-0}")")"
+
+if [[ -r "${HOME}/.bashrc" ]]; then
+
+    if grep -q "[ -r \"/workspaces/dotfiles/bashrc.sh\" ] && source \"/workspaces/dotfiles/bashrc.sh\"" ${HOME}/.bashrc; then
+        # 既にbashrcを読む処理が追加されているのでスキップ
+        :
+    else
+        cat <<EOF >>${HOME}/.bashrc
+[ -r "${script_directory}/bashrc.sh" ] && source "${script_directory}/bashrc.sh"
+EOF
+    fi
+
+fi

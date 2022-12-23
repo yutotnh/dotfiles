@@ -6,8 +6,13 @@ test -d /home/linuxbrew/.linuxbrew && eval $(/home/linuxbrew/.linuxbrew/bin/brew
 
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
 
-eval "$(starship init bash)"
-eval "$(zoxide init bash)"
+if type starship &>/dev/null; then
+    eval "$(starship init bash)"
+fi
+
+if type zoxide &>/dev/null; then
+    eval "$(zoxide init bash)"
+fi
 
 if type brew &>/dev/null; then
     HOMEBREW_PREFIX="$(brew --prefix)"
@@ -36,7 +41,12 @@ shopt -u direxpand
 stty stop undef  # Ctrl+Rで履歴をさかのぼって進みすぎたときにCtrl+Sで戻れるようにする
 stty start undef # 普通はCtrl+Sは端末ロックに割り当てられているので、それを解除
 
+script_directory="$(dirname "$(realpath "${BASH_SOURCE:-0}")")"
 
-. git-completion.bash
+if [[ -r "${script_directory}/git-completion.bash" ]]; then
+    source git-completion.bash
+fi
 
-. alias.sh
+if [[ -r "${script_directory}/alias.sh" ]]; then
+    source alias.sh
+fi
