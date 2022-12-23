@@ -20,6 +20,23 @@ if type brew &>/dev/null; then
     fi
 fi
 
+export HISTFILESIZE=100000
+export HISTSIZE=100000
+export HISTTIMEFORMAT='%F %T '
+export LESSOPEN='|src-hilite-lesspipe.sh -n %s'
+
+shopt -s autocd
+shopt -s cdable_vars
+shopt -s cdspell
+shopt -s dirspell
+shopt -s dotglob
+shopt -s globstar
+shopt -u direxpand
+
+stty stop undef  # Ctrl+Rで履歴をさかのぼって進みすぎたときにCtrl+Sで戻れるようにする
+stty start undef # 普通はCtrl+Sは端末ロックに割り当てられているので、それを解除
+
+
 . git-completion.bash
 
 . alias.sh
