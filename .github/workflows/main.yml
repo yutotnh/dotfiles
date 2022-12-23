@@ -4,14 +4,13 @@ on: [push, pull_request, workflow_dispatch]
 
 jobs:
   install:
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ubuntu-latest, macos-latest]
+    runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v3
 
       - name: Install
         run: |
+          set -e
           bash install.sh
+          source ~/.bashrc
