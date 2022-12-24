@@ -28,7 +28,25 @@ fi
 export HISTFILESIZE=100000
 export HISTSIZE=100000
 export HISTTIMEFORMAT='%F %T '
+export LESS='--RAW-CONTROL-CHARS --LONG-PROMPT --hilite-search --IGNORE-CASE --no-init' # batで内部的にlessを使うときにless部分の行番号を表示したくないので、--LINE-NUMBERSを指定しない(aliasで設定する)
 export LESSOPEN='|src-hilite-lesspipe.sh -n %s'
+
+if [ "${TERM_PROGRAM}" == "vscode" ]; then
+    export EDITOR="code --wait"
+    export VISUAL="code --wait"
+    export LESSEDIT="code --wait --goto %f\:?lm%lm."
+fi
+
+if type rg &>/dev/null; then
+    export FZF_DEFAULT_COMMAND='rg --files --hidden --follow --glob "!.git"'
+    export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+    export FZF_ALT_C_COMMAND='rg --files-with-matches --hidden --follow --glob "!.git"'
+fi
+
+if type bat &>/dev/null; then
+    export BAT_STYLE="full"
+    export MANPAGER="sh -c 'col -bx | bat -l man -p'"
+fi
 
 shopt -s autocd
 shopt -s cdable_vars
