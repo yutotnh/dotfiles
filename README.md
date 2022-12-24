@@ -15,7 +15,7 @@ sudo
 
 __解決法__
 
-`/etc/wsl.conf` に以下を書き込む
+`/etc/wsl.conf` に以下を書き込み、ホストのWindowsを再起動する
 
 ```text:/etc/wsl.comf
 [interop]
