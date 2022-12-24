@@ -43,10 +43,6 @@ stty start undef # 普通はCtrl+Sは端末ロックに割り当てられてい�
 
 script_directory="$(dirname "$(realpath "${BASH_SOURCE:-0}")")"
 
-if [[ -r "${script_directory}/git-completion.bash" ]]; then
-    source git-completion.bash
-fi
-
 if [[ -r "${script_directory}/alias.sh" ]]; then
     source alias.sh
 fi
