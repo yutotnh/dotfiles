@@ -6,7 +6,10 @@ test -d /home/linuxbrew/.linuxbrew && eval $(/home/linuxbrew/.linuxbrew/bin/brew
 
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
 
-if type starship &>/dev/null; then
+# VSCodeのシェル統合を利用中に再度`eval "$(starship init bash)"`を行うと、無限ループしてしまう
+# そのため`eval "$(starship init bash)"`の実行は一度だけにしたい
+# eval "$(starship init bash)" を実行すると環境変数STARSHIP_SHELLが定義されるので、それの有無から実行の可否を決める
+if type starship &>/dev/null && [[ ! -v STARSHIP_SHELL ]]; then
     eval "$(starship init bash)"
 fi
 
