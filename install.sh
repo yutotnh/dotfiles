@@ -14,11 +14,6 @@ brew bundle --no-lock
 # To install useful key bindings and fuzzy completion:
 $(brew --prefix)/opt/fzf/install --all
 
-# 本当はHomebrewでGitをインストールして、そこの`git-completion.bash`を使いたい
-# だけど、2022/12現在bash-completionとGit両方をbrewでインストールしようとしたらエラーが発生する
-# そのため、解決するまでは `git-completion.bash`を直接ダウンロードして利用する
-curl -sO https://raw.githubusercontent.com/git/git/master/contrib/completion/git-completion.bash
-
 script_directory="$(dirname "$(realpath "${BASH_SOURCE:-0}")")"
 
 if [[ -r "${HOME}/.bashrc" ]]; then
