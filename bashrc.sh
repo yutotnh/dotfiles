@@ -28,7 +28,8 @@ fi
 export HISTFILESIZE=100000
 export HISTSIZE=100000
 export HISTTIMEFORMAT='%F %T '
-export LESS='--RAW-CONTROL-CHARS --LONG-PROMPT --hilite-search --IGNORE-CASE --no-init' # batで内部的にlessを使うときにless部分の行番号を表示したくないので、--LINE-NUMBERSを指定しない(aliasで設定する)
+# batで内部的にlessを使うときにless部分の行番号を表示したくないので、--LINE-NUMBERSを指定しない(aliasで設定する)
+export LESS='--RAW-CONTROL-CHARS --LONG-PROMPT --hilite-search --IGNORE-CASE --no-init'
 export LESSOPEN='|src-hilite-lesspipe.sh -n %s'
 
 if [ "${TERM_PROGRAM}" == "vscode" ]; then
@@ -45,19 +46,23 @@ fi
 
 if type bat &>/dev/null; then
     export BAT_STYLE="full"
-    export MANPAGER="sh -c 'col -bx | bat -l man -p'"
+    export MANPAGER="sh -c 'col -bx | bat -l man -p'" # manコマンドの出力をbatでハイライトする
 fi
 
-shopt -s autocd
-shopt -s cdable_vars
-shopt -s cdspell
-shopt -s dirspell
-shopt -s dotglob
-shopt -s globstar
-shopt -u direxpand
+shopt -s autocd      # cdコマンドに引数がないときに、カレントディレクトリを表示する
+shopt -s cdable_vars # cdコマンドに変数名を指定できるようにする
+shopt -s cdspell     # cdコマンドの引数が間違っているときに、正しい候補を表示する
+shopt -s dirspell    # ディレクトリ名のスペルミスを訂正する
+shopt -s dotglob     # ドットファイルを含む
+shopt -s globstar    # **を使って再帰的にマッチングできるようにする
 
-stty stop undef  # Ctrl+Rで履歴をさかのぼって進みすぎたときにCtrl+Sで戻れるようにする
-stty start undef # 普通はCtrl+Sは端末ロックに割り当てられているので、それを解除
+# Ctrl+Rで履歴をさかのぼって進みすぎたときにCtrl+Sで戻れるようにする
+# 普通はCtrl+Sは出力停止に割り当てられているので、それを解除する
+# ついでに、Ctrl+Qは出力再開に割り当てられていて出力停止の解除に伴い使わなくなるので、それも解除する
+if [[ -t 0 ]]; then # 標準入力が端末のときだけ実行する(scpなどで実行されたときにエラーになるのを防ぐ)
+    stty stop undef
+    stty start undef
+fi
 
 script_directory="$(dirname "$(realpath "${BASH_SOURCE:-0}")")"
 
