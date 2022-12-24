@@ -25,17 +25,9 @@ if type brew &>/dev/null; then
     fi
 fi
 
-export GROFF_NO_SGR=1 # for konsole and gnome-terminal (LESS_TERMCAP_mb is not working)
 export HISTFILESIZE=100000
 export HISTSIZE=100000
 export HISTTIMEFORMAT='%F %T '
-export LESS_TERMCAP_mb=$'\e[1;31m'                                                      # begin bold
-export LESS_TERMCAP_md=$'\e[1;33m'                                                      # begin blink
-export LESS_TERMCAP_me=$'\e[0m'                                                         # reset bold/blink
-export LESS_TERMCAP_se=$'\e[0m'                                                         # reset reverse video
-export LESS_TERMCAP_so=$'\e[01;44;37m'                                                  # begin reverse video
-export LESS_TERMCAP_ue=$'\e[0m'                                                         # reset underline
-export LESS_TERMCAP_us=$'\e[01;37m'                                                     # begin underline
 export LESS='--RAW-CONTROL-CHARS --LONG-PROMPT --hilite-search --IGNORE-CASE --no-init' # batで内部的にlessを使うときにless部分の行番号を表示したくないので、--LINE-NUMBERSを指定しない(aliasで設定する)
 export LESSOPEN='|src-hilite-lesspipe.sh -n %s'
 
