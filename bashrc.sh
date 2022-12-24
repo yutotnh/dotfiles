@@ -36,6 +36,10 @@ if [ "${TERM_PROGRAM}" == "vscode" ]; then
     export EDITOR="code --wait"
     export VISUAL="code --wait"
     export LESSEDIT="code --wait --goto %f\:?lm%lm."
+else
+    export EDITOR="vim"
+    export VISUAL="vim"
+    export LESSEDIT="vim"
 fi
 
 if type rg &>/dev/null; then
@@ -67,5 +71,5 @@ fi
 script_directory="$(dirname "$(realpath "${BASH_SOURCE:-0}")")"
 
 if [[ -r "${script_directory}/alias.sh" ]]; then
-    source alias.sh
+    source "${script_directory}/alias.sh"
 fi
