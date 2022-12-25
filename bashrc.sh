@@ -77,8 +77,8 @@ if [[ -t 0 ]]; then # 標準入力が端末のときだけ実行する(scpなど
     stty start undef
 fi
 
-script_directory="$(dirname "$(realpath "${BASH_SOURCE:-0}")")"
+SCRIPT_DIRECTORY="$(dirname "$(realpath "${BASH_SOURCE:-0}")")"
 
-if [[ -r "${script_directory}/alias.sh" ]]; then
-    source "${script_directory}/alias.sh"
+if [[ -r "${SCRIPT_DIRECTORY}/alias.sh" ]]; then
+    source "${SCRIPT_DIRECTORY}/alias.sh"
 fi
