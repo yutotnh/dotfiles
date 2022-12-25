@@ -7,12 +7,14 @@ git clone https://github.com/yutotnh/dotfiles.git
 cd dotfiles
 sudo
 ./install.sh
+exec bash -l
 ```
 
 ## Uninstall
 
 ```bash
 ./uninstall.sh
+exec bash -l
 ```
 
 ## 補足
