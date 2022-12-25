@@ -1,12 +1,18 @@
 # dotfiles
 
-## Installation
+## Install
 
 ```bash
 git clone https://github.com/yutotnh/dotfiles.git
 cd dotfiles
 sudo
 ./install.sh
+```
+
+## Uninstall
+
+```bash
+./uninstall.sh
 ```
 
 ## 補足
