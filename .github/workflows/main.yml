@@ -12,5 +12,16 @@ jobs:
       - name: Install
         run: |
           set -e
-          bash install.sh
+          ./install.sh
           source ~/.bashrc
+          # Homebrewと、Homebrewでインストールしたコマンド(の内1つ)が存在するか確認する
+          type brew
+          type bat
+
+      - name: Uninstall
+        run: |
+          set -e
+          ./uninstall.sh
+          # Homebrewと、Homebrewでインストールしたコマンド(の内1つ)が存在していないこと確認する
+          if type brew &>/dev/null; then false; fi
+          if type bat &>/dev/null; then false; fi
