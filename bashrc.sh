@@ -42,7 +42,8 @@ if [ "${TERM_PROGRAM}" == "vscode" ]; then
 else
     export EDITOR="vim"
     export VISUAL="vim"
-    export LESSEDIT="vim"
+    # unset LESSEDIT でもいいけど、とりあえずデフォルト値を指定しておく
+    export LESSEDIT="%E ?lm+%lm. %f"
 fi
 
 if type bat &>/dev/null; then
