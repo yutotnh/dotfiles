@@ -21,11 +21,11 @@ if type brew &>/dev/null; then
     HOMEBREW_PREFIX="$(brew --prefix)"
     if [[ -r "${HOMEBREW_PREFIX}/etc/profile.d/bash_completion.sh" ]]; then
         source "${HOMEBREW_PREFIX}/etc/profile.d/bash_completion.sh"
-    else
-        for COMPLETION in "${HOMEBREW_PREFIX}/etc/bash_completion.d/"*; do
-            [[ -r "${COMPLETION}" ]] && source "${COMPLETION}"
-        done
     fi
+
+    for COMPLETION in "${HOMEBREW_PREFIX}/etc/bash_completion.d/"*; do
+        [[ -r "${COMPLETION}" ]] && source "${COMPLETION}"
+    done
 fi
 
 export HISTFILESIZE=100000
@@ -45,15 +45,20 @@ else
     export LESSEDIT="vim"
 fi
 
+if type bat &>/dev/null; then
+    export BAT_STYLE="full"
+    export MANPAGER="sh -c 'col -bx | bat -l man -p'" # manコマンドの出力をbatでハイライトする
+fi
+
+if type delta &>/dev/null; then
+    export GIT_PAGER="delta"
+    export DELTA_FEATURES="side-by-side"
+fi
+
 if type rg &>/dev/null; then
     export FZF_DEFAULT_COMMAND='rg --files --hidden --follow --glob "!.git"'
     export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
     export FZF_ALT_C_COMMAND='rg --files-with-matches --hidden --follow --glob "!.git"'
-fi
-
-if type bat &>/dev/null; then
-    export BAT_STYLE="full"
-    export MANPAGER="sh -c 'col -bx | bat -l man -p'" # manコマンドの出力をbatでハイライトする
 fi
 
 shopt -s autocd      # cdコマンドに引数がないときに、カレントディレクトリを表示する
