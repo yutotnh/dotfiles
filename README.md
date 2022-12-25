@@ -5,7 +5,7 @@
 ```bash
 git clone https://github.com/yutotnh/dotfiles.git
 cd dotfiles
-sudo
+sudo true
 ./install.sh
 exec bash -l
 ```
