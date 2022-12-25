@@ -18,12 +18,12 @@ script_directory="$(dirname "$(realpath "${BASH_SOURCE:-0}")")"
 
 if [[ -r "${HOME}/.bashrc" ]]; then
 
-    if grep -q "[ -r \"/workspaces/dotfiles/bashrc.sh\" ] && source \"/workspaces/dotfiles/bashrc.sh\"" ${HOME}/.bashrc; then
+    if grep -qF "[[ -r \"${script_directory}/bashrc.sh\" ]] && source \"${script_directory}/bashrc.sh\"" "${HOME}/.bashrc"; then
         # 既にbashrcを読む処理が追加されているのでスキップ
         :
     else
         cat <<EOF >>${HOME}/.bashrc
-[ -r "${script_directory}/bashrc.sh" ] && source "${script_directory}/bashrc.sh"
+[[ -r "${script_directory}/bashrc.sh" ]] && source "${script_directory}/bashrc.sh"
 EOF
     fi
 
