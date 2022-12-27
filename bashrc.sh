@@ -84,3 +84,5 @@ if [[ -r "${SCRIPT_DIRECTORY}/alias.sh" ]]; then
 fi
 
 bind -f "${SCRIPT_DIRECTORY}/inputrc"
+
+export STARSHIP_CONFIG="${SCRIPT_DIRECTORY}/starship.toml"
