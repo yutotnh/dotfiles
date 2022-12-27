@@ -82,3 +82,5 @@ SCRIPT_DIRECTORY="$(dirname "$(realpath "${BASH_SOURCE:-0}")")"
 if [[ -r "${SCRIPT_DIRECTORY}/alias.sh" ]]; then
     source "${SCRIPT_DIRECTORY}/alias.sh"
 fi
+
+bind -f "${SCRIPT_DIRECTORY}/inputrc"

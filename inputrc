@@ -1,0 +1,31 @@
+#! /bin/bash
+
+# 補完候補を表示するときに、一致した部分を色付けする
+set colored-completion-prefix On
+
+# ファイルの種類に応じて色を付ける
+set colored-stats on
+
+# 補完候補を表示するときに大文字小文字を区別しない
+set completion-ignore-case on
+
+# 補完候補を表示するときにハイフン(-)とアンダースコア(_)を区別しない
+set completion-map-case on
+
+# 制御文字を表示しない(例: Ctrl+Cを押したときに、^Cと表示されないようにする)
+set echo-control-characters off
+
+# ディレクトリへのシンボリックの場合、末尾に/を付けて表示する
+set mark-symlinked-directories on
+
+# メニューの補完時に、共通のプレフィックスを表示する
+set menu-complete-display-prefix on
+
+# 履歴を変更して実行しても、その変更をのちの履歴に反映しない
+set revert-all-at-newline on
+
+# Tabキーを1度押すだけで補完候補を表示する
+set show-all-if-ambiguous on
+
+# 実行ファイルに*を付ける
+set visible-stats on
