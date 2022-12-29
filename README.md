@@ -10,6 +10,15 @@ sudo true
 exec bash -l
 ```
 
+## Update
+
+```
+git pull
+sudo true
+./install.sh
+exec bash -l
+```
+
 ## Uninstall
 
 ```bash
