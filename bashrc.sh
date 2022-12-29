@@ -34,6 +34,7 @@ export HISTTIMEFORMAT='%F %T '
 # batで内部的にlessを使うときにless部分の行番号を表示したくないので、--LINE-NUMBERSを指定しない(aliasで設定する)
 export LESS='--RAW-CONTROL-CHARS --LONG-PROMPT --hilite-search --IGNORE-CASE --no-init'
 export LESSOPEN='|src-hilite-lesspipe.sh -n %s'
+export IGNOREEOF=3 # Ctrl+Dを4回押すとbashを終了する
 
 if [ "${TERM_PROGRAM}" == "vscode" ]; then
     export EDITOR="code --wait"
