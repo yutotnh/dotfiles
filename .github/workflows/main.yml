@@ -16,7 +16,7 @@ jobs:
 
       - name: Install
         run: |
-          set -e
+          set -eu
           ./install.sh
           exec bash -l
           # Homebrewと、Homebrewでインストールしたコマンド(の内1つ)が存在するか確認する
@@ -25,7 +25,8 @@ jobs:
 
       - name: Update
         run: |
-          set -e
+          set -eu
+          exec bash -l
           ${DOTFILES_DIRECTORY}/install.sh
           exec bash -l
           # Homebrewと、Homebrewでインストールしたコマンド(の内1つ)が存在するか確認する
@@ -34,7 +35,8 @@ jobs:
 
       - name: Uninstall
         run: |
-          set -e
+          set -eu
+          exec bash -l
           ${DOTFILES_DIRECTORY}/uninstall.sh
           exec bash -l
           # Homebrewと、Homebrewでインストールしたコマンド(の内1つ)が存在していないこと確認する
