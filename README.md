@@ -12,17 +12,18 @@ exec bash -l
 
 ## Update
 
-```
+```bash
+cd ${DOTFILES_DIRECTORY}
 git pull
 sudo true
-./install.sh
+${DOTFILES_DIRECTORY}/install.sh
 exec bash -l
 ```
 
 ## Uninstall
 
 ```bash
-./uninstall.sh
+${DOTFILES_DIRECTORY}/uninstall.sh
 exec bash -l
 ```
 

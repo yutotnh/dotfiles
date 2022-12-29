@@ -86,3 +86,6 @@ fi
 bind -f "${SCRIPT_DIRECTORY}/.inputrc"
 
 export STARSHIP_CONFIG="${SCRIPT_DIRECTORY}/starship.toml"
+
+# Update や Uninstall 時に本リポジトリのパスを参照するために定義する
+export DOTFILES_DIRECTORY="${SCRIPT_DIRECTORY}"
