@@ -1,5 +1,3 @@
-#! /bin/bash
-
 # 補完候補を表示するときに、一致した部分を色付けする
 set colored-completion-prefix On
 
