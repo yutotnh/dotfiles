@@ -1,10 +1,12 @@
 #!/bin/bash
 
 alias ..='cd ..'
+alias cat='bat --paging never --style plain'
 alias cd='z'
 alias e='exa --long --all --icons --time-style iso --ignore-glob ".git"'
 alias et='exa --long --all --icons --time-style iso --sort newest --ignore-glob ".git"'
 alias exit='exit 0'
+alias fzf='fzf --preview "bat --color=always --style=numbers --line-range=:500 {}"'
 alias icdiff='icdiff -U 1 -N -H'
 alias l='ls -AFhg --no-group --color=auto'
 alias la='ls -A --color=auto'
