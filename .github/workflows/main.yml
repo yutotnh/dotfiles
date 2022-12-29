@@ -16,8 +16,18 @@ jobs:
 
       - name: Install
         run: |
-          set -e
+          set -eu
           ./install.sh
+          exec bash -l
+          # Homebrewと、Homebrewでインストールしたコマンド(の内1つ)が存在するか確認する
+          type brew
+          type bat
+
+      - name: Update
+        run: |
+          set -eu
+          exec bash -l
+          ${DOTFILES_DIRECTORY}/install.sh
           exec bash -l
           # Homebrewと、Homebrewでインストールしたコマンド(の内1つ)が存在するか確認する
           type brew
@@ -25,8 +35,9 @@ jobs:
 
       - name: Uninstall
         run: |
-          set -e
-          ./uninstall.sh
+          set -eu
+          exec bash -l
+          ${DOTFILES_DIRECTORY}/uninstall.sh
           exec bash -l
           # Homebrewと、Homebrewでインストールしたコマンド(の内1つ)が存在していないこと確認する
           if type brew &>/dev/null; then false; fi
