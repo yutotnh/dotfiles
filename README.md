@@ -15,7 +15,6 @@ exec bash -l
 ```bash
 cd ${DOTFILES_DIRECTORY}
 git pull
-sudo true
 ${DOTFILES_DIRECTORY}/install.sh
 exec bash -l
 ```
