@@ -67,7 +67,6 @@ shopt -s autocd      # cdコマンドに引数がないときに、カレント�
 shopt -s cdable_vars # cdコマンドに変数名を指定できるようにする
 shopt -s cdspell     # cdコマンドの引数が間違っているときに、正しい候補を表示する
 shopt -s dirspell    # ディレクトリ名のスペルミスを訂正する
-shopt -s dotglob     # ドットファイルを含む
 shopt -s globstar    # **を使って再帰的にマッチングできるようにする
 
 # Ctrl+Rで履歴をさかのぼって進みすぎたときにCtrl+Sで戻れるようにする
