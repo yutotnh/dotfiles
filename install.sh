@@ -6,8 +6,12 @@ set -eu
 # 参考: https://docs.brew.sh/Installation#unattended-installation
 NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
+# Homebrew の PATH を通す
+#   Linux
 test -d ~/.linuxbrew && eval $(~/.linuxbrew/bin/brew shellenv)
 test -d /home/linuxbrew/.linuxbrew && eval $(/home/linuxbrew/.linuxbrew/bin/brew shellenv)
+#   macOS
+test -d /opt/homebrew/bin && eval $(/opt/homebrew/bin/brew shellenv)
 
 brew bundle --no-lock
 
