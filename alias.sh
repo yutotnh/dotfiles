@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 alias ..='cd ..'
 alias cat='bat --paging never --style plain'
@@ -13,8 +13,13 @@ alias la='ls -A --color=auto'
 alias less='less --LINE-NUMBERS'
 alias ll='ls -AlF --color=auto'
 alias ls='ls -AF --color=auto'
-alias open='xdg-open'
 alias sl='ls'
 alias ssh='ssh -XC'
-alias start='xdg-open'
 alias view='vim -RM'
+
+if [ "${OSTYPE}" == "linux-gnu" ]; then
+    alias open='xdg-open'
+    alias start='xdg-open'
+elif [ "${OSTYPE}" == "darwin" ]; then
+    alias start='open'
+fi

@@ -1,6 +1,4 @@
-#!/bin/bash
-
-set -eu
+#!/usr/bin/env bash
 
 if type brew &>/dev/null && [[ -x $(brew --prefix)/opt/fzf/uninstall ]]; then
     $(brew --prefix)/opt/fzf/uninstall
