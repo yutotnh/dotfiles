@@ -1,4 +1,4 @@
-#!/bin/bash -eu
+#!/usr/bin/env bash
 
 # Set PATH, MANPATH, etc., for Homebrew.
 test -d ~/.linuxbrew && eval $(~/.linuxbrew/bin/brew shellenv)
