@@ -1,5 +1,16 @@
 #!/usr/bin/env bash
 
+##
+# @brief alias で実行するコマンドが存在するときのみ、 alias に登録する関数
+function alias() {
+    local command
+    command=$(echo "${1}" | grep -oP "(?<=\=)[^\s]*" | head -1)
+
+    if type "${command}" &>/dev/null; then
+        builtin alias "${1}"
+    fi
+}
+
 alias ..='cd ..'
 alias cat='bat --paging never --style plain'
 alias cd='z'
