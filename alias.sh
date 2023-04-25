@@ -34,3 +34,5 @@ if [ "${OSTYPE}" == "linux-gnu" ]; then
 elif [ "${OSTYPE}" == "darwin" ]; then
     alias start='open'
 fi
+
+unset alias
