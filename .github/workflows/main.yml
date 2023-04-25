@@ -35,6 +35,8 @@ jobs:
           # Homebrewと、Homebrewでインストールしたコマンド(の内1つ)が存在するか確認する
           type brew
           type bat
+          # エイリアスが設定できていることを確認する
+          alias cat
 
       - name: Uninstall
         run: |
@@ -45,3 +47,5 @@ jobs:
           # Homebrewと、Homebrewでインストールしたコマンド(の内1つ)が存在していないこと確認する
           if type brew &>/dev/null; then false; fi
           if type bat &>/dev/null; then false; fi
+          # エイリアスが設定されないことを確認する
+          if alias cat &>/dev/null; then false; fi
