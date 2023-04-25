@@ -4,7 +4,7 @@
 # @brief alias で実行するコマンドが存在するときのみ、 alias に登録する関数
 function alias() {
     local command
-    command=$(echo "${1}" | grep -o "\=[^ \t]*" | sed 's/\=//' | head -1)
+    command=$(echo "${1}" | grep -o "\=[^[:space:]]*" | sed 's/\=//' | head -1)
 
     if type "${command}" &>/dev/null; then
         builtin alias "${1}"
