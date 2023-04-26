@@ -13,8 +13,8 @@ format = ", [$symbol($version(-$name))]($style)"
 symbol = " "
 
 [character]
-error_symbol = "[\\$](bold red)"
-success_symbol = "[\\$](bold green)"
+error_symbol = "\n[\\$](bold red)"
+success_symbol = "\n[\\$](bold green)"
 
 [cmake]
 format = ", [$symbol($version)]($style)"
@@ -118,6 +118,9 @@ format = ", [$symbol($version)]($style)"
 [kubernetes]
 format = ", [$symbol$context( \\($namespace\\))]($style)"
 
+[line_break]
+disabled = true
+
 [lua]
 format = ", [$symbol($version)]($style)"
 symbol = " "
@@ -153,6 +156,7 @@ format = ", [$symbol$cloud(\\($project\\))]($style)"
 
 [os]
 format = ", [$symbol]($style)"
+disabled = false
 
 [os.symbols]
 Alpine = " "
@@ -233,6 +237,9 @@ symbol = " "
 [scala]
 format = ", [$symbol($version)]($style)"
 symbol = " "
+
+[shell]
+disabled = false
 
 [shlvl]
 disabled = false
