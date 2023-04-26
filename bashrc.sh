@@ -29,6 +29,10 @@ if type brew &>/dev/null; then
     done
 fi
 
+if type rustc &>/dev/null; then
+    source "$(rustc --print sysroot)/etc/bash_completion.d/cargo"
+fi
+
 export HISTFILESIZE=100000
 export HISTSIZE=100000
 export HISTTIMEFORMAT='%F %T '
