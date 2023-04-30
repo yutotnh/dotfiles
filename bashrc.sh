@@ -46,8 +46,10 @@ if [ "${TERM_PROGRAM}" == "vscode" ]; then
     export VISUAL="code --wait"
     export LESSEDIT="code --wait --goto %f\:?lm%lm."
 else
-    export EDITOR="vim"
-    export VISUAL="vim"
+    if type vim &>/dev/null; then
+        export EDITOR="vim"
+        export VISUAL="vim"
+    fi
     # unset LESSEDIT でもいいけど、とりあえずデフォルト値を指定しておく
     export LESSEDIT="%E ?lm+%lm. %f"
 fi
