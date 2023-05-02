@@ -2,7 +2,7 @@
 
 set -eu
 
-if type curl &>/dev/null; then
+if ! type curl &>/dev/null; then
     echo "cURL is required for installation."
     echo "Please make cURL available."
     exit 1
