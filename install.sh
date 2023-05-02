@@ -2,6 +2,12 @@
 
 set -eu
 
+if ! type curl &>/dev/null; then
+    echo "cURL is required for installation."
+    echo "Please make cURL available."
+    exit 1
+fi
+
 # yumやaptだと管理者権限が必要なので、Homebrewをインストールする
 # 参考: https://docs.brew.sh/Installation#unattended-installation
 NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
