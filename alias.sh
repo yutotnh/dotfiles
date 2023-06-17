@@ -35,4 +35,11 @@ elif [ "${OSTYPE}" == "darwin" ]; then
     alias start='open'
 fi
 
+# WSL で実行中に Windows のコマンドを実行するための alias
+if uname -r | grep -qi microsoft; then
+    builtin alias explorer='/mnt/c/Windows/explorer.exe'
+    builtin alias clip='/mnt/c/Windows/System32/clip.exe'
+    builtin alias code='/mnt/c/Users/*/AppData/Local/Programs/Microsoft\ VS\ Code/bin/code'
+fi
+
 unset alias
