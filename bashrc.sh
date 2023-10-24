@@ -27,6 +27,8 @@ if type brew &>/dev/null; then
     for COMPLETION in "${HOMEBREW_PREFIX}/etc/bash_completion.d/"*; do
         [[ -r "${COMPLETION}" ]] && source "${COMPLETION}"
     done
+
+    unset HOMEBREW_PREFIX
 fi
 
 if type rustc &>/dev/null; then
@@ -41,6 +43,8 @@ export LESS='--RAW-CONTROL-CHARS --LONG-PROMPT --hilite-search --IGNORE-CASE --n
 export LESSOPEN='|src-hilite-lesspipe.sh -n %s'
 export IGNOREEOF=3 # Ctrl+Dを4回押すとbashを終了する
 
+# 編集は基本VS Codeを使った方が速いので、
+# VS Codeの統合ターミナルを利用している時はVS Codeを利用する
 if [ "${TERM_PROGRAM}" == "vscode" ]; then
     export EDITOR="code --wait"
     export VISUAL="code --wait"
@@ -84,15 +88,13 @@ if [[ -t 0 ]]; then # 標準入力が端末のときだけ実行する(scpなど
     stty start undef
 fi
 
-SCRIPT_DIRECTORY="$(dirname "$(realpath "${BASH_SOURCE:-0}")")"
+# Update や Uninstall 時に本リポジトリのパスを参照するために定義する
+export DOTFILES_DIRECTORY="$(dirname "$(realpath "${BASH_SOURCE:-0}")")"
 
-if [[ -r "${SCRIPT_DIRECTORY}/alias.sh" ]]; then
-    source "${SCRIPT_DIRECTORY}/alias.sh"
+if [[ -r "${DOTFILES_DIRECTORY}/alias.sh" ]]; then
+    source "${DOTFILES_DIRECTORY}/alias.sh"
 fi
 
-bind -f "${SCRIPT_DIRECTORY}/.inputrc"
+bind -f "${DOTFILES_DIRECTORY}/.inputrc"
 
-export STARSHIP_CONFIG="${SCRIPT_DIRECTORY}/starship.toml"
-
-# Update や Uninstall 時に本リポジトリのパスを参照するために定義する
-export DOTFILES_DIRECTORY="${SCRIPT_DIRECTORY}"
+export STARSHIP_CONFIG="${DOTFILES_DIRECTORY}/starship.toml"
