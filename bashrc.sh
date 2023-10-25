@@ -97,4 +97,6 @@ fi
 
 bind -f "${DOTFILES_DIRECTORY}/.inputrc"
 
-export STARSHIP_CONFIG="${DOTFILES_DIRECTORY}/starship.toml"
+if type starship &>/dev/null; then
+    export STARSHIP_CONFIG="${DOTFILES_DIRECTORY}/starship.toml"
+fi
