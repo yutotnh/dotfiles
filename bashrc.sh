@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# Update や Uninstall 時に本リポジトリのパスを参照するために定義する
+export DOTFILES_DIRECTORY="$(dirname "$(realpath "${BASH_SOURCE:-0}")")"
+
 # Set PATH, MANPATH, etc., for Homebrew.
 test -d ~/.linuxbrew && eval $(~/.linuxbrew/bin/brew shellenv)
 test -d /home/linuxbrew/.linuxbrew && eval $(/home/linuxbrew/.linuxbrew/bin/brew shellenv)
@@ -12,6 +15,7 @@ test -d /opt/homebrew/ && eval $(/opt/homebrew/bin/brew shellenv)
 # `eval "$(starship init bash)"` を実行すると環境変数STARSHIP_CMD_STATUSが定義されるので、それの有無から実行の可否を決める
 if type starship &>/dev/null && [[ ! -v STARSHIP_CMD_STATUS ]]; then
     eval "$(starship init bash)"
+    export STARSHIP_CONFIG="${DOTFILES_DIRECTORY}/starship.toml"
 fi
 
 if type zoxide &>/dev/null; then
@@ -40,7 +44,7 @@ export HISTSIZE=100000
 export HISTTIMEFORMAT='%F %T '
 # batで内部的にlessを使うときにless部分の行番号を表示したくないので、--LINE-NUMBERSを指定しない(aliasで設定する)
 export LESS='--RAW-CONTROL-CHARS --LONG-PROMPT --hilite-search --IGNORE-CASE --no-init'
-export LESSOPEN='|src-hilite-lesspipe.sh -n %s'
+export LESSOPEN='|src-hilite-lesspipe.sh %s'
 export IGNOREEOF=3 # Ctrl+Dを4回押すとbashを終了する
 
 # 編集は基本VS Codeを使った方が速いので、
@@ -88,15 +92,8 @@ if [[ -t 0 ]]; then # 標準入力が端末のときだけ実行する(scpなど
     stty start undef
 fi
 
-# Update や Uninstall 時に本リポジトリのパスを参照するために定義する
-export DOTFILES_DIRECTORY="$(dirname "$(realpath "${BASH_SOURCE:-0}")")"
-
 if [[ -r "${DOTFILES_DIRECTORY}/alias.sh" ]]; then
     source "${DOTFILES_DIRECTORY}/alias.sh"
 fi
 
 bind -f "${DOTFILES_DIRECTORY}/.inputrc"
-
-if type starship &>/dev/null; then
-    export STARSHIP_CONFIG="${DOTFILES_DIRECTORY}/starship.toml"
-fi
