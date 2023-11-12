@@ -65,6 +65,7 @@ fi
 if type bat &>/dev/null; then
     export BAT_STYLE="full"
     export MANPAGER="sh -c 'col -bx | bat -l man -p'" # manコマンドの出力をbatでハイライトする
+    export MANROFFOPT="-c"                            # manコマンドのフォーマットがおかしくなるのを防ぐ
 fi
 
 if type delta &>/dev/null; then
