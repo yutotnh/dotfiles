@@ -73,10 +73,38 @@ if type delta &>/dev/null; then
     export DELTA_FEATURES="side-by-side"
 fi
 
-if type rg &>/dev/null; then
-    export FZF_DEFAULT_COMMAND='rg --files --hidden --follow --glob "!.git"'
+if type fzf &>/dev/null; then
+    export FZF_HEADER="whoami | sed -z 's/\n/ in /g'; hostname | sed -z 's/\n/ in /g '; pwd"
+    if type fd &>/dev/null; then
+        export FZF_DEFAULT_COMMAND="${FZF_HEADER}; fd --type f --hidden --exclude .git"
+    else
+        export FZF_DEFAULT_COMMAND="${FZF_HEADER}; find . -type f -not -path '*/\.git/*'"
+    fi
+    export FZF_DEFAULT_OPTS='--no-height --border none --preview-window border-left --header-lines 1 --reverse --no-mouse'
+
     export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
-    export FZF_ALT_C_COMMAND='rg --files-with-matches --hidden --follow --glob "!.git"'
+    if type bat &>/dev/null; then
+        export FZF_CTRL_T_OPTS='--preview "bat --style=numbers --color=always --line-range :500 {}"'
+    else
+        export FZF_CTRL_T_OPTS='--preview "head -n 500 {}"'
+    fi
+
+    # FZF_CTRL_R_COMMAND は存在しないので、FZF_DEFAULT_OPTSからヘッダーを除く
+    export FZF_CTRL_R_OPTS="--no-header-lines"
+
+    if type fd &>/dev/null; then
+        export FZF_ALT_C_COMMAND="${FZF_HEADER}; fd --type d --hidden --exclude .git"
+    else
+        export FZF_ALT_C_COMMAND="${FZF_HEADER}; find . -type d -not -path '*/\.git/*'"
+    fi
+
+    if type eza &>/dev/null; then
+        export FZF_ALT_C_OPTS='--preview "eza --all --long --tree --level 3 --time-style=iso {}"'
+    elif type tree &>/dev/null; then
+        export FZF_ALT_C_OPTS='--preview "tree -C -L 3 -a -l --timefmt %F {}"'
+    else
+        export FZF_ALT_C_OPTS='--preview "ls -l --time-style=iso {}"'
+    fi
 fi
 
 shopt -s autocd      # cdコマンドに引数がないときに、カレントディレクトリを表示する
