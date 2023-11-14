@@ -89,8 +89,9 @@ if type fzf &>/dev/null; then
         export FZF_CTRL_T_OPTS='--preview "head -n 500 {}"'
     fi
 
-    # FZF_CTRL_R_COMMAND は存在しないので、FZF_DEFAULT_OPTSからヘッダーを除く
-    export FZF_CTRL_R_OPTS="--no-header-lines"
+    # FZF_CTRL_R_COMMAND は存在しないので、FZF_DEFAULT_OPTSからヘッダーを除き、ヘッダーを別途指定する
+    # 実行毎にヘッダーを構成できないので、ユーザー名とホスト名をヘッダーに含め、カレントディレクトリの表示は諦める
+    export FZF_CTRL_R_OPTS="--no-header-lines --header ${USER}\ in\ ${HOSTNAME}"
 
     if type fd &>/dev/null; then
         export FZF_ALT_C_COMMAND="${FZF_HEADER}; fd --type d --hidden --exclude .git"
