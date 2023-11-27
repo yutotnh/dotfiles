@@ -128,3 +128,10 @@ if [[ -r "${DOTFILES_DIRECTORY}/alias.sh" ]]; then
 fi
 
 bind -f "${DOTFILES_DIRECTORY}/.inputrc"
+
+# LANG=ja_JP.UTF-8が設定できる環境では、LANG=ja_JP.UTF-8を設定する
+# LANG=ja_JP.UTF-8が設定できない環境では、LANG=en_US.UTF-8を設定する
+# `locale -a`で出てくる物は正規化せれているので、UTF-8ではなくutf8になっている
+if locale -a 2>/dev/null | grep -qF 'ja_JP.utf8'; then
+    export LANG=ja_JP.UTF-8
+fi
