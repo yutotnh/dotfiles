@@ -1,5 +1,4 @@
 tap "homebrew/bundle"
-tap "homebrew/core"
 brew "bash-completion@2"
 brew "bat"
 brew "bottom"
