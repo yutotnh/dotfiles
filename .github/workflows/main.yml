@@ -28,37 +28,13 @@ jobs:
           fi
 
       - name: Install
-        run: |
-          set -eu
-          ./install.sh
-          exec bash -l
-          # Homebrewと、Homebrewでインストールしたコマンド(の内1つ)が存在するか確認する
-          type brew
-          type bat
+        uses: ./.github/workflows/install
 
       - name: Update
-        run: |
-          set -eu
-          exec bash -l
-          ${DOTFILES_DIRECTORY}/install.sh
-          exec bash -l
-          # Homebrewと、Homebrewでインストールしたコマンド(の内1つ)が存在するか確認する
-          type brew
-          type bat
-          # エイリアスが設定できていることを確認する
-          alias cat
+        uses: ./.github/workflows/update
 
       - name: Uninstall
-        run: |
-          set -eu
-          exec bash -l
-          ${DOTFILES_DIRECTORY}/uninstall.sh
-          exec bash -l
-          # Homebrewと、Homebrewでインストールしたコマンド(の内1つ)が存在していないこと確認する
-          if type brew &>/dev/null; then false; fi
-          if type bat &>/dev/null; then false; fi
-          # エイリアスが設定されないことを確認する
-          if alias cat &>/dev/null; then false; fi
+        uses: ./.github/workflows/uninstall
 
   install-macos:
     runs-on: macos-latest
@@ -67,34 +43,10 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Install
-        run: |
-          set -eu
-          ./install.sh
-          exec bash -l
-          # Homebrewと、Homebrewでインストールしたコマンド(の内1つ)が存在するか確認する
-          type brew
-          type bat
+        uses: ./.github/workflows/install
 
       - name: Update
-        run: |
-          set -eu
-          exec bash -l
-          ${DOTFILES_DIRECTORY}/install.sh
-          exec bash -l
-          # Homebrewと、Homebrewでインストールしたコマンド(の内1つ)が存在するか確認する
-          type brew
-          type bat
-          # エイリアスが設定できていることを確認する
-          alias cat
+        uses: ./.github/workflows/update
 
       - name: Uninstall
-        run: |
-          set -eu
-          exec bash -l
-          ${DOTFILES_DIRECTORY}/uninstall.sh
-          exec bash -l
-          # Homebrewと、Homebrewでインストールしたコマンド(の内1つ)が存在していないこと確認する
-          if type brew &>/dev/null; then false; fi
-          if type bat &>/dev/null; then false; fi
-          # エイリアスが設定されないことを確認する
-          if alias cat &>/dev/null; then false; fi
+        uses: ./.github/workflows/uninstall
