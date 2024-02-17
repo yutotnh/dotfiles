@@ -10,12 +10,22 @@ on:
 jobs:
   install:
     runs-on: ${{ matrix.os }}
+    container: ${{ matrix.container }}
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest]
+        container: ["rockylinux:9", "ubuntu:latest"]
 
     steps:
       - uses: actions/checkout@v4
+
+      - name: Set up
+        run: |
+          if [ "${{ matrix.container }}" = "rockylinux:9" ]; then
+            dnf -y install git
+          elif [ "${{ matrix.container }}" = "ubuntu:latest" ]; then
+            apt-get update && apt-get -y install git
+          fi
 
       - name: Install
         run: |
