@@ -108,6 +108,10 @@ if type fzf &>/dev/null; then
     fi
 fi
 
+if type vim &>/dev/null; then
+    export VIMINIT="source ${DOTFILES_DIRECTORY}/.vimrc"
+fi
+
 shopt -s autocd      # cdコマンドに引数がないときに、カレントディレクトリを表示する
 shopt -s cdable_vars # cdコマンドに変数名を指定できるようにする
 shopt -s cdspell     # cdコマンドの引数が間違っているときに、正しい候補を表示する
