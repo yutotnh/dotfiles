@@ -8,12 +8,11 @@ on:
     - cron: "0 9 * * 5"
 
 jobs:
-  install:
-    runs-on: ${{ matrix.os }}
+  install-linux:
+    runs-on: ubuntu-latest
     container: ${{ matrix.container }}
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest]
         container: ["rockylinux:9", "ubuntu:latest"]
 
     steps:
@@ -26,6 +25,45 @@ jobs:
           elif [ "${{ matrix.container }}" = "ubuntu:latest" ]; then
             apt-get update && apt-get -y install git
           fi
+
+      - name: Install
+        run: |
+          set -eu
+          ./install.sh
+          exec bash -l
+          # Homebrewと、Homebrewでインストールしたコマンド(の内1つ)が存在するか確認する
+          type brew
+          type bat
+
+      - name: Update
+        run: |
+          set -eu
+          exec bash -l
+          ${DOTFILES_DIRECTORY}/install.sh
+          exec bash -l
+          # Homebrewと、Homebrewでインストールしたコマンド(の内1つ)が存在するか確認する
+          type brew
+          type bat
+          # エイリアスが設定できていることを確認する
+          alias cat
+
+      - name: Uninstall
+        run: |
+          set -eu
+          exec bash -l
+          ${DOTFILES_DIRECTORY}/uninstall.sh
+          exec bash -l
+          # Homebrewと、Homebrewでインストールしたコマンド(の内1つ)が存在していないこと確認する
+          if type brew &>/dev/null; then false; fi
+          if type bat &>/dev/null; then false; fi
+          # エイリアスが設定されないことを確認する
+          if alias cat &>/dev/null; then false; fi
+
+  install-macos:
+    runs-on: macos-latest
+
+    steps:
+      - uses: actions/checkout@v4
 
       - name: Install
         run: |
