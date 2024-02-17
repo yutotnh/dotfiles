@@ -138,7 +138,12 @@ if [[ -r "${DOTFILES_DIRECTORY}/alias.sh" ]]; then
     source "${DOTFILES_DIRECTORY}/alias.sh"
 fi
 
-bind -f "${DOTFILES_DIRECTORY}/.inputrc"
+# 標準出力が端末でないときに下記の処理を実行すると`bind: warning: line editing not enabled`が発生するため、
+# 標準出力が端末のときだけ実行する
+# 多分上で処理している `[[ -t 0 ]]` でもいいけど、参考にしたサイトが`[[ -t 1 ]]`なので念のため同じにしている
+if [[ -t 1 ]]; then
+    bind -f "${DOTFILES_DIRECTORY}/.inputrc"
+fi
 
 # LANG=ja_JP.UTF-8が設定できる環境では、LANG=ja_JP.UTF-8を設定する
 # LANG=ja_JP.UTF-8が設定できない環境では、LANG=en_US.UTF-8を設定する
