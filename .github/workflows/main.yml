@@ -8,44 +8,45 @@ on:
     - cron: "0 9 * * 5"
 
 jobs:
-  install:
-    runs-on: ${{ matrix.os }}
+  install-linux:
+    runs-on: ubuntu-latest
+    container: ${{ matrix.container }}
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest]
+        container: ["rockylinux:9", "ubuntu:latest"]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up
+        run: |
+          if [ "${{ matrix.container }}" = "rockylinux:9" ]; then
+            dnf groupinstall -y "Development Tools"
+            dnf install -y --allowerasing procps-ng curl file git
+          elif [ "${{ matrix.container }}" = "ubuntu:latest" ]; then
+            apt-get update && apt-get install -y build-essential procps curl file git
+          fi
+
+      - name: Install
+        uses: ./.github/workflows/install
+
+      - name: Update
+        uses: ./.github/workflows/update
+
+      - name: Uninstall
+        uses: ./.github/workflows/uninstall
+
+  install-macos:
+    runs-on: macos-latest
 
     steps:
       - uses: actions/checkout@v4
 
       - name: Install
-        run: |
-          set -eu
-          ./install.sh
-          exec bash -l
-          # Homebrewと、Homebrewでインストールしたコマンド(の内1つ)が存在するか確認する
-          type brew
-          type bat
+        uses: ./.github/workflows/install
 
       - name: Update
-        run: |
-          set -eu
-          exec bash -l
-          ${DOTFILES_DIRECTORY}/install.sh
-          exec bash -l
-          # Homebrewと、Homebrewでインストールしたコマンド(の内1つ)が存在するか確認する
-          type brew
-          type bat
-          # エイリアスが設定できていることを確認する
-          alias cat
+        uses: ./.github/workflows/update
 
       - name: Uninstall
-        run: |
-          set -eu
-          exec bash -l
-          ${DOTFILES_DIRECTORY}/uninstall.sh
-          exec bash -l
-          # Homebrewと、Homebrewでインストールしたコマンド(の内1つ)が存在していないこと確認する
-          if type brew &>/dev/null; then false; fi
-          if type bat &>/dev/null; then false; fi
-          # エイリアスが設定されないことを確認する
-          if alias cat &>/dev/null; then false; fi
+        uses: ./.github/workflows/uninstall
