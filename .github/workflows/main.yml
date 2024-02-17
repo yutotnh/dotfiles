@@ -21,9 +21,10 @@ jobs:
       - name: Set up
         run: |
           if [ "${{ matrix.container }}" = "rockylinux:9" ]; then
-            dnf -y install git
+            dnf groupinstall -y "Development Tools"
+            dnf install -y procps-ng curl file git
           elif [ "${{ matrix.container }}" = "ubuntu:latest" ]; then
-            apt-get update && apt-get -y install git curl
+            apt-get update && apt-get install -y build-essential procps curl file git
           fi
 
       - name: Install
