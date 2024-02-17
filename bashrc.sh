@@ -42,9 +42,16 @@ fi
 export HISTFILESIZE=100000
 export HISTSIZE=100000
 export HISTTIMEFORMAT='%F %T '
-# batで内部的にlessを使うときにless部分の行番号を表示したくないので、--LINE-NUMBERSを指定しない(aliasで設定する)
-export LESS='--RAW-CONTROL-CHARS --LONG-PROMPT --hilite-search --IGNORE-CASE --no-init'
-export LESSOPEN='|src-hilite-lesspipe.sh %s'
+
+if type less &>/dev/null; then
+    # batで内部的にlessを使うときにless部分の行番号を表示したくないので、--LINE-NUMBERSを指定しない(aliasで設定する)
+    export LESS='--RAW-CONTROL-CHARS --LONG-PROMPT --hilite-search --IGNORE-CASE --no-init'
+
+    if type src-hilite-lesspipe.sh &>/dev/null; then
+        export LESSOPEN='|src-hilite-lesspipe.sh %s'
+    fi
+fi
+
 export IGNOREEOF=3 # Ctrl+Dを4回押すとbashを終了する
 
 # 編集は基本VS Codeを使った方が速いので、
