@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 
 # Update や Uninstall 時に本リポジトリのパスを参照するために定義する
-export DOTFILES_DIRECTORY="$(dirname "$(realpath "${BASH_SOURCE:-0}")")"
+DOTFILES_DIRECTORY="$(dirname "$(realpath "${BASH_SOURCE:-0}")")"
+export DOTFILES_DIRECTORY
 
 # Set PATH, MANPATH, etc., for Homebrew.
 test -d ~/.linuxbrew && eval $(~/.linuxbrew/bin/brew shellenv)

@@ -30,7 +30,7 @@ exec bash -l
 
 ### WSL 使用時に `dotfiles/bashrc.sh` の実行が遅くなる
 
-__解決法__
+**解決法**
 
 `/etc/wsl.conf` に以下を書き込み、ホストのWindowsを再起動する
 
@@ -39,7 +39,7 @@ __解決法__
 appendWindowsPath = false
 ```
 
-__理由__
+**理由**
 
 WSLのデフォルト設定だと Windows の PATH を引き継いでいる
 

@@ -1,0 +1,35 @@
+name: Format
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  shellscript:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Run the sh-checker
+        uses: luizm/action-sh-checker@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SHELLCHECK_OPTS: --exclude=SC1090,SC1091,SC2046
+        with:
+          sh_checker_comment: true
+
+  prettier:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "lts/*"
+      - name: Install prettier
+        run: npm install -g prettier
+      - name: Run the prettier
+        run: prettier --write "**/*.{json,md,yml}"
+      - name: Check for changes
+        run: git diff --exit-code

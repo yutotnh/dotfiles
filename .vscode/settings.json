@@ -1,3 +1,16 @@
 {
+  "[json][jsonc][markdown]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[shellscript]": {
+    "editor.defaultFormatter": "foxundermoon.shell-format"
+  },
+  "[dockerfile]": {
+    // Dockerfileはあまりいじらないのと、今のところきれいに整形できるものがないのでフォーマッターは無効にしておく
+    "editor.formatOnSave": false,
+    "editor.formatOnType": false
+  },
+  "editor.formatOnSave": true,
+  "editor.formatOnType": true,
   "files.encoding": "utf8"
 }

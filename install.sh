@@ -22,7 +22,7 @@ test -d /opt/homebrew/bin && eval $(/opt/homebrew/bin/brew shellenv)
 brew bundle --no-lock
 
 # To install useful key bindings and fuzzy completion:
-$(brew --prefix)/opt/fzf/install --all
+"$(brew --prefix)/opt/fzf/install" --all
 
 SCRIPT_DIRECTORY="$(dirname "$(realpath "${BASH_SOURCE:-0}")")"
 
@@ -32,7 +32,7 @@ if [[ -r "${HOME}/.bashrc" ]]; then
         # 既にbashrcを読む処理が追加されているのでスキップ
         :
     else
-        cat <<EOF >>${HOME}/.bashrc
+        cat <<EOF >>"${HOME}/.bashrc"
 [[ -r "${SCRIPT_DIRECTORY}/bashrc.sh" ]] && source "${SCRIPT_DIRECTORY}/bashrc.sh"
 EOF
     fi
