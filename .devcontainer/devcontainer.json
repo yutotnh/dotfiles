@@ -19,7 +19,11 @@
   // Configure tool-specific properties.
   "customizations": {
     "vscode": {
-      "extensions": ["foxundermoon.shell-format", "timonwong.shellcheck"]
+      "extensions": [
+        "esbenp.prettier-vscode",
+        "foxundermoon.shell-format",
+        "timonwong.shellcheck"
+      ]
     }
   }
 
