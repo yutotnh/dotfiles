@@ -23,7 +23,7 @@ set hidden
 set showcmd
 " マウス操作の有効化 & ホイール操作の有効化
 set mouse=a
-"viとの互換性を無効にする(INSERT中にカーソルキーが有効になる)
+" viとの互換性を無効にする(INSERT中にカーソルキーが有効になる)
 set nocompatible
 " クリップボードを有効にする
 set clipboard=unnamed,autoselect
@@ -65,19 +65,19 @@ set backspace=indent,eol,start
 """""""""""""""""""
 " ファイル名表示
 set statusline=%F
-" 変更チェック表示
+" 変更チェック表示(",+"が変更あり、",-"は変更不可)
 set statusline+=%M
 " 読み込み専用かどうか表示
 set statusline+=%R
-" ヘルプページなら[HELP]と表示
+" ヘルプページなら",HLP"と表示
 set statusline+=%H
-" プレビューウインドウなら[Prevew]と表示
+" プレビューウインドウなら",PRV"と表示
 set statusline+=%W
 
 " これ以降は右寄せ表示
 set statusline+=%=
 
-" 現在行数/全行数/パーセント
+" カーソル位置表示
 set statusline+=Ln\ %l(%p%%),Col\ %c
 set statusline+=\|
 " file encoding
