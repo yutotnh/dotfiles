@@ -34,7 +34,7 @@ exec bash -l
 
 `/etc/wsl.conf` に以下を書き込み、ホストのWindowsを再起動する
 
-```text:/etc/wsl.comf
+```text:/etc/wsl.conf
 [interop]
 appendWindowsPath = false
 ```
