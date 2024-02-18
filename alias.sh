@@ -11,18 +11,32 @@ function alias() {
     fi
 }
 
-alias ..='cd ..'
+alias ..='cd .. && pwd'
+
+# 以下のようなエイリアスを作成する
+# ..1 => cd ../ && pwd
+# ..2 => cd ../../ && pwd
+for i in {1..9}; do
+    dir=$(printf "%${i}s" | sed "s! !../!g")
+    # shellcheck disable=SC2139
+    alias "..${i}"="cd ${dir} && pwd"
+done
+
 alias cat='bat --paging never --style plain'
 alias cd='z'
 alias e='eza --long --all --icons --time-style iso --ignore-glob ".git"'
 alias et='eza --long --all --icons --time-style iso --sort newest --ignore-glob ".git"'
 alias exit='exit 0'
+alias g='grep --color=auto'
 alias icdiff='icdiff -U 1 -N -H'
 alias l='ls -Ahg --no-group --color=auto'
 alias la='ls -A --color=auto'
 alias less='less --LINE-NUMBERS'
 alias ll='ls -Al --color=auto'
 alias ls='ls -A --color=auto'
+alias lt='ls -trl'
+alias mkdir='mkdir -p'
+alias mv='mv -i'
 alias sl='ls'
 alias ssh='ssh -XC'
 alias view='vim -RM'
