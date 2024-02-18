@@ -53,7 +53,9 @@ if type less &>/dev/null; then
     fi
 fi
 
-export IGNOREEOF=3 # Ctrl+Dを4回押すとbashを終了する
+# よく誤入力するので、Ctrl+Dを一回打っただけでログアウトされるとつらい
+# そのため、Ctrl+Dを4回押すとbashを終了するようにする
+export IGNOREEOF=3
 
 # 編集は基本VS Codeを使った方が速いので、
 # VS Codeの統合ターミナルを利用している時はVS Codeを利用する
@@ -147,7 +149,6 @@ if [[ -t 1 ]]; then
 fi
 
 # LANG=ja_JP.UTF-8が設定できる環境では、LANG=ja_JP.UTF-8を設定する
-# LANG=ja_JP.UTF-8が設定できない環境では、LANG=en_US.UTF-8を設定する
 # `locale -a`で出てくる物は正規化されているので、UTF-8ではなくutf8になっている
 if locale -a 2>/dev/null | grep -qF 'ja_JP.utf8'; then
     export LANG=ja_JP.UTF-8
