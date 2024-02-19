@@ -50,6 +50,10 @@ if type less &>/dev/null; then
 
     if type src-hilite-lesspipe.sh &>/dev/null; then
         export LESSOPEN='|src-hilite-lesspipe.sh %s'
+        if type lv &>/dev/null; then
+            # 文字コードがUTF-8でないときに備えて、lvを使って文字コードを変換する
+            export LESSOPEN="${LESSOPEN} | lv"
+        fi
     fi
 fi
 
@@ -81,6 +85,13 @@ fi
 if type delta &>/dev/null; then
     export GIT_PAGER="delta"
     export DELTA_FEATURES="side-by-side"
+    if type lv &>/dev/null; then
+        export GIT_PAGER="lv | ${GIT_PAGER}"
+    fi
+fi
+
+if type lv &>/dev/null; then
+    export LV="-c"
 fi
 
 if type fzf &>/dev/null; then
