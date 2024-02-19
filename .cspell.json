@@ -78,6 +78,7 @@
     "rlang",
     "rockylinux",
     "rustc",
+    "rustup",
     "shellenv",
     "shiftwidth",
     "shlvl",
