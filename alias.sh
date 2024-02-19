@@ -44,8 +44,11 @@ alias view='vim -RM'
 if [ "${OSTYPE}" == "linux-gnu" ]; then
     alias open='xdg-open'
     alias start='xdg-open'
-elif [ "${OSTYPE}" == "darwin" ]; then
+elif [[ "${OSTYPE}" == *"darwin"* ]]; then
     alias start='open'
+    # macOS で GNU の ls を使うための alias
+    # Coreutils がインストールされている場合にlsがglsとしてインストールされる
+    alias ls='gls -A --color=auto'
 fi
 
 # WSL で実行中に Windows のコマンドを実行するための alias
