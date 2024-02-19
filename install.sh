@@ -35,6 +35,8 @@ rustup-init -y
 
 SCRIPT_DIRECTORY="$(dirname "$(realpath "${BASH_SOURCE:-0}")")"
 
+##
+# @brief ~/.bashrcにbashrc.sh を読み込む処理を追加する
 if [[ -r "${HOME}/.bashrc" ]]; then
 
     if grep -qF "[[ -r \"${SCRIPT_DIRECTORY}/bashrc.sh\" ]] && source \"${SCRIPT_DIRECTORY}/bashrc.sh\"" "${HOME}/.bashrc"; then
