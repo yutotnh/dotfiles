@@ -24,6 +24,15 @@ brew bundle --no-lock
 # To install useful key bindings and fuzzy completion:
 "$(brew --prefix)/opt/fzf/install" --all
 
+##
+# @brief Rust の環境をセットアップする
+if type rustup-init &>/dev/null; then
+    rustup-init -y
+else
+    echo "Can not setup Rust environment." >&2
+fi
+rustup-init -y
+
 SCRIPT_DIRECTORY="$(dirname "$(realpath "${BASH_SOURCE:-0}")")"
 
 if [[ -r "${HOME}/.bashrc" ]]; then
