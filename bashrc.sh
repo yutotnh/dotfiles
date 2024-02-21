@@ -43,6 +43,12 @@ fi
 export HISTFILESIZE=100000
 export HISTSIZE=100000
 export HISTTIMEFORMAT='%F %T '
+export HISTCONTROL=ignoreboth
+# 閲覧系コマンドは履歴に残さない
+export HISTIGNORE='cd:e:et:exit:l:la:less:less *:ll:ls:lt:lv:lv *:sl:date:pwd:* --help'
+# 本dotfilesを読み込まずHISTSIZEがデフォルト値になったとき、~\/.bash_historyが上書きされて過去の履歴が消えるのを防ぐために、
+# 本dotfilesを読み込んだときは別の場所に.bash_historyを作成する
+export HISTFILE="${DOTFILES_DIRECTORY}/.bash_history"
 
 if type less &>/dev/null; then
     # batで内部的にlessを使うときにless部分の行番号を表示したくないので、--LINE-NUMBERSを指定しない(aliasで設定する)
