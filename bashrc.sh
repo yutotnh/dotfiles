@@ -43,6 +43,9 @@ fi
 export HISTFILESIZE=100000
 export HISTSIZE=100000
 export HISTTIMEFORMAT='%F %T '
+export HISTCONTROL=ignoreboth
+export HISTIGNORE='cd:e:et:exit:l:la:less:less *:ll:ls:ls *:lt:lv:lv *:sl:date:pwd:* --help'
+export HISTFILE="${DOTFILES_DIRECTORY}/.bash_history"
 
 if type less &>/dev/null; then
     # batで内部的にlessを使うときにless部分の行番号を表示したくないので、--LINE-NUMBERSを指定しない(aliasで設定する)
