@@ -11,12 +11,35 @@ test -d /opt/homebrew/ && eval $(/opt/homebrew/bin/brew shellenv)
 
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
 
-# VSCodeのシェル統合を利用中に再度`eval "$(starship init bash)"`を行うと、無限ループしてしまう
-# そのため`eval "$(starship init bash)"`の実行は一度だけにしたい
-# `eval "$(starship init bash)"` を実行すると環境変数STARSHIP_CMD_STATUSが定義されるので、それの有無から実行の可否を決める
-if type starship &>/dev/null && [[ ! -v STARSHIP_CMD_STATUS ]]; then
-    eval "$(starship init bash)"
-    export STARSHIP_CONFIG="${DOTFILES_DIRECTORY}/starship.toml"
+if type starship &>/dev/null; then
+    # VSCodeのシェル統合を利用中に再度`eval "$(starship init bash)"`を行うと、無限ループしてしまう
+    # そのため`eval "$(starship init bash)"`の実行は一度だけにしたい
+    # `eval "$(starship init bash)"` を実行すると環境変数STARSHIP_CMD_STATUSが定義されるので、それの有無から実行の可否を決める
+    if [ ! -v STARSHIP_CMD_STATUS ]; then
+        eval "$(starship init bash)"
+        export STARSHIP_CONFIG="${DOTFILES_DIRECTORY}/starship.toml"
+    fi
+else
+    # starshipがインストールされていないときは、プロンプトをある程度カスタマイズする
+    # モチベーションは直前のコマンドの終了ステータス(成功か失敗か)を常に把握したいため
+
+    # 直前のコマンドの終了ステータスによって、プロンプトの色を変える
+    # 0: 緑、それ以外: 赤
+    function prompt_color() {
+        local status=$?
+        if [ $status -eq 0 ]; then
+            printf '\e[0;32m'
+        else
+            printf '\e[0;31m'
+        fi
+    }
+
+    # 以下のようなプロンプトにする
+    #   user@host full_path
+    #   $
+    export PS1='\[\e[0;32m\]\u\[\e[0m\]@\[\e[0;32m\]\h\[\e[0m\] \[\e[0;34m\]\w\[\e[0m\]\n$(prompt_color)\$\[\e[0m\] '
+    # あまりにも長いパスを表示すると見づらいので、4階層まで表示する
+    export PROMPT_DIRTRIM=4
 fi
 
 if type zoxide &>/dev/null; then
