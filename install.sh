@@ -31,7 +31,6 @@ if type rustup-init &>/dev/null; then
 else
     echo "Can not setup Rust environment." >&2
 fi
-rustup-init -y
 
 SCRIPT_DIRECTORY="$(dirname "$(realpath "${BASH_SOURCE:-0}")")"
 
