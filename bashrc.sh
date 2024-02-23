@@ -159,7 +159,8 @@ if type fzf &>/dev/null; then
 fi
 
 if type vim &>/dev/null; then
-    export VIMINIT="source ${DOTFILES_DIRECTORY}/.vimrc"
+    export MYVIMRC="${DOTFILES_DIRECTORY}/.vimrc"
+    export VIMINIT="source ${MYVIMRC}"
 fi
 
 shopt -s autocd      # cdコマンドに引数がないときに、カレントディレクトリを表示する

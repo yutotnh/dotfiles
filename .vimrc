@@ -3,7 +3,9 @@
 """""""""""""""""""
 " いろいろ便利な設定がされていて便利なので、デフォルトの設定を読み込む
 unlet! skip_defaults_vim
-source $VIMRUNTIME/defaults.vim
+if filereadable($VIMRUNTIME.'/defaults.vim')
+    source $VIMRUNTIME/defaults.vim
+endif
 
 """""""""""""""""""
 " Setting
@@ -25,8 +27,6 @@ set showcmd
 set mouse=a
 " viとの互換性を無効にする(INSERT中にカーソルキーが有効になる)
 set nocompatible
-" クリップボードを有効にする
-set clipboard=unnamed,autoselect
 
 """""""""""""""""""
 " Visual
@@ -58,6 +58,8 @@ colorscheme evening
 set title
 " インサートモード中の BS、CTRL-W、CTRL-U による文字削除を柔軟にする
 set backspace=indent,eol,start
+" カーソルの外観を変更させない(端末の設定のまま)
+set guicursor=
 
 """""""""""""""""""
 " Statusline
@@ -119,3 +121,46 @@ set wrapscan
 set hlsearch
 " ESC連打でハイライト解除
 nmap <Esc><Esc> :nohlsearch<CR><Esc>
+
+"""""""""""""""""""
+" Plugin
+"""""""""""""""""""
+" Automatic install of vim-plug
+" https://github.com/junegunn/vim-plug/wiki/tips#automatic-installation
+
+" ~/.vim でプラグインを管理すると、共有環境でプラグインを使いたいときに他の人に影響を及ぼすので、
+" DOTFILES_DIRECTORY の中でプラグインを管理するようにする
+if exists('$DOTFILES_DIRECTORY')
+    " DOTFILESが設定されている場合の処理
+    if empty(glob('$DOTFILES_DIRECTORY/.vim/autoload/plug.vim'))
+        silent !curl -fLo /home/yuto/project/dotfiles/.vim/autoload/plug.vim --create-dirs  https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+    endif
+
+    set runtimepath+=$DOTFILES_DIRECTORY/.vim
+
+    " Run PlugInstall if there are missing plugins
+    autocmd VimEnter * if len(filter(values(g:plugs), '!isdirectory(v:val.dir)'))
+        \| PlugInstall --sync | source $MYVIMRC
+    \| endif
+
+    call plug#begin('$DOTFILES_DIRECTORY/.vim/plugged')
+        Plug 'tpope/vim-fugitive'
+        Plug 'airblade/vim-gitgutter'
+        Plug 'prabirshrestha/vim-lsp'
+        Plug 'prabirshrestha/asyncomplete.vim'
+        Plug 'prabirshrestha/asyncomplete-lsp.vim'
+        Plug 'mattn/vim-lsp-settings'
+        Plug 'vim-airline/vim-airline'
+        Plug 'preservim/nerdtree'
+    call plug#end()
+
+    let g:lsp_settings_servers_dir = $DOTFILES_DIRECTORY . '/.vim/vim-lsp-settings/servers'
+    let g:airline#extensions#tabline#enabled = 1
+    let g:airline_powerline_fonts = 1
+
+    " VS CodeのようにCtrl+BでNERDTreeを開閉する
+    nnoremap <C-b> :NERDTreeToggle<CR>
+
+    " Ctrl+Nで次のタブに移動
+    nmap <C-n> <Plug>AirlineSelectNextTab
+endif
