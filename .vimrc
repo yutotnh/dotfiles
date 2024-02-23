@@ -3,7 +3,9 @@
 """""""""""""""""""
 " いろいろ便利な設定がされていて便利なので、デフォルトの設定を読み込む
 unlet! skip_defaults_vim
-source $VIMRUNTIME/defaults.vim
+if filereadable($VIMRUNTIME.'/defaults.vim')
+    source $VIMRUNTIME/defaults.vim
+endif
 
 """""""""""""""""""
 " Setting
@@ -25,8 +27,6 @@ set showcmd
 set mouse=a
 " viとの互換性を無効にする(INSERT中にカーソルキーが有効になる)
 set nocompatible
-" クリップボードを有効にする
-set clipboard=unnamed,autoselect
 
 """""""""""""""""""
 " Visual
@@ -58,6 +58,8 @@ colorscheme evening
 set title
 " インサートモード中の BS、CTRL-W、CTRL-U による文字削除を柔軟にする
 set backspace=indent,eol,start
+" カーソルの外観を変更させない(端末の設定のまま)
+set guicursor=
 
 """""""""""""""""""
 " Statusline
