@@ -152,6 +152,7 @@ if exists('$DOTFILES_DIRECTORY')
         Plug 'mattn/vim-lsp-settings'
         Plug 'vim-airline/vim-airline'
         Plug 'preservim/nerdtree'
+        Plug 'tyru/caw.vim'
     call plug#end()
 
     let g:lsp_settings_servers_dir = $DOTFILES_DIRECTORY . '/.vim/vim-lsp-settings/servers'
@@ -163,4 +164,8 @@ if exists('$DOTFILES_DIRECTORY')
 
     " Ctrl+Nで次のタブに移動
     nmap <C-n> <Plug>AirlineSelectNextTab
+
+    " Ctrl+/でコメント切り替え
+    nmap <C-_> <Plug>(caw:i:toggle)
+    vmap <C-_> <Plug>(caw:i:toggle)
 endif
