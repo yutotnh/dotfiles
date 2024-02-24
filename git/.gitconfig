@@ -1,0 +1,39 @@
+[user]
+	name = yutotnh
+	email = 57719497+yutotnh@users.noreply.github.com
+
+[init]
+	defaultBranch = main
+
+[push]
+	autoSetupRemote = true
+
+[grep]
+	lineNumber = true
+
+[core]
+	# 日本語のファイル名やディレクトリ名の文字化けを防ぐ
+	quotepath = false
+
+[alias]
+	# よく使うコマンドのエイリアス
+	# statusやcommitは二文字目まで入力しても他の候補があるので補完が効きにくい
+	# そのため、短いエイリアスを設定して補完しやすくする
+	s = status --short # shortの情報で十分な場合が多いため、--shortをデフォルトにする
+	c = commit
+
+	# clone時にサブモジュールも再帰的にcloneする
+	# 忘れた時が面倒で、毎回調べるのも面倒なのでエイリアスを設定
+	# デメリットとして、サブモジュールが多いリポジトリの場合、cloneに時間がかかる
+	clone = clone --recurse-submodules
+
+[commit]
+	gpgsign = true
+
+[tag]
+	gpgsign = true
+
+[include]
+	# リポジトリごとに設定を変えたい場合がある
+	# そのためリポジトリごとに設定ファイルを作成し、includeで読み込む
+	path = .gitconfig.local

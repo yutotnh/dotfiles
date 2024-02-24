@@ -119,6 +119,20 @@ if type delta &>/dev/null; then
     fi
 fi
 
+if type git &>/dev/null; then
+    # gitの補完はbrewでインストールした場合は他の補完を有効にするときに一緒に有効になる
+    # そのため、ここではbrewのgitの補完は有効にしない
+    # brewでインストールしていない場合でもUbuntuでは補完が有効になるが、RHEL系では有効にならない
+    # そのため、gitの補完が無効のときは有効にする
+    # 有効・無効の判定は`__git`が関数として定義されているかどうかとする
+    if [ "$(type -t __git)" != "function" ]; then
+        if [ -r /usr/share/bash-completion/completions/git ]; then
+            source /usr/share/bash-completion/completions/git
+        fi
+    fi
+    export GIT_CONFIG_GLOBAL="${DOTFILES_DIRECTORY}/git/.gitconfig"
+fi
+
 if type lv &>/dev/null; then
     export LV="-c"
 fi
