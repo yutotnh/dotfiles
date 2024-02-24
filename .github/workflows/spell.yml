@@ -38,5 +38,6 @@ jobs:
       - uses: reviewdog/action-setup@v1
       - run: npm install -g cspell
       - name: Spell check of file name
-        # ファイル名のチェックなので、Reviewdog は使えないため、Pull requestでもPushでも同じ処理を行う
+        # ファイル名のチェックなのでReviewdog は使えない
+        # そのためPull requestでもPushでも同じ処理を行う
         run: cspell check --color --config .cspell.json <(git ls-files)
