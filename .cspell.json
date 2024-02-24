@@ -89,6 +89,7 @@
     "pulumi",
     "purescript",
     "pyenv",
+    "quotepath",
     "raku",
     "reviewdog",
     "ripgrep",
