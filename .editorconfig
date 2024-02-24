@@ -14,3 +14,6 @@ insert_final_newline = true
 [*.{json,md,yml}]
 # Prettierに合わせて2スペースにする
 indent_size = 2
+
+[*gitconfig*]
+indent_style = tab
