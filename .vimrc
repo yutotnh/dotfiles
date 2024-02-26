@@ -133,7 +133,7 @@ nmap <Esc><Esc> :nohlsearch<CR><Esc>
 if exists('$DOTFILES_DIRECTORY')
     " DOTFILESが設定されている場合の処理
     if empty(glob('$DOTFILES_DIRECTORY/.vim/autoload/plug.vim'))
-        silent !curl -fLo /home/yuto/project/dotfiles/.vim/autoload/plug.vim --create-dirs  https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+        silent !curl -fLo "$DOTFILES_DIRECTORY/.vim/autoload/plug.vim" --create-dirs  https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
     endif
 
     set runtimepath+=$DOTFILES_DIRECTORY/.vim
