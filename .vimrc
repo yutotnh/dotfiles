@@ -159,6 +159,11 @@ if exists('$DOTFILES_DIRECTORY')
     let g:airline#extensions#tabline#enabled = 1
     let g:airline_powerline_fonts = 1
 
+    " vim-gitgutterの設定
+    " デフォルトでは4000msに設定されているが、それだとだいぶ遅いので短めに変更する
+    " リポジトリのREADMEによると、100ms程度に減らすのがおすすめとのこと
+    set updatetime=100
+
     " VS CodeのようにCtrl+BでNERDTreeを開閉する
     nnoremap <C-b> :NERDTreeToggle<CR>
 
