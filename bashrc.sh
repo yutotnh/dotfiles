@@ -138,7 +138,8 @@ if type lv &>/dev/null; then
 fi
 
 if type fzf &>/dev/null; then
-    export FZF_HEADER="whoami | sed -z 's/\n/ in /g'; hostname | sed -z 's/\n/ in /g '; pwd"
+    # shellcheck disable=SC2016
+    export FZF_HEADER='echo ${USER} in ${HOSTNAME} in ${PWD}'
     if type fd &>/dev/null; then
         export FZF_DEFAULT_COMMAND="${FZF_HEADER}; fd --type f --hidden --exclude .git"
     else
@@ -146,7 +147,7 @@ if type fzf &>/dev/null; then
     fi
     export FZF_DEFAULT_OPTS='--no-height --border none --preview-window border-left --header-lines 1 --reverse --no-mouse'
 
-    export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+    export FZF_CTRL_T_COMMAND="${FZF_DEFAULT_COMMAND}"
     if type bat &>/dev/null; then
         export FZF_CTRL_T_OPTS='--preview "bat --style=numbers --color=always --line-range :500 {}"'
     else
