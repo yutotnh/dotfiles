@@ -133,7 +133,7 @@ nmap <Esc><Esc> :nohlsearch<CR><Esc>
 if exists('$DOTFILES_DIRECTORY')
     " DOTFILESが設定されている場合の処理
     if empty(glob('$DOTFILES_DIRECTORY/.vim/autoload/plug.vim'))
-        silent !curl -fLo /home/yuto/project/dotfiles/.vim/autoload/plug.vim --create-dirs  https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+        silent !curl -fLo "$DOTFILES_DIRECTORY/.vim/autoload/plug.vim" --create-dirs  https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
     endif
 
     set runtimepath+=$DOTFILES_DIRECTORY/.vim
@@ -158,6 +158,14 @@ if exists('$DOTFILES_DIRECTORY')
     let g:lsp_settings_servers_dir = $DOTFILES_DIRECTORY . '/.vim/vim-lsp-settings/servers'
     let g:airline#extensions#tabline#enabled = 1
     let g:airline_powerline_fonts = 1
+
+    " dotfilesを表示する
+    let NERDTreeShowHidden=1
+
+    " vim-gitgutterの設定
+    " デフォルトでは4000msに設定されているが、それだとだいぶ遅いので短めに変更する
+    " リポジトリのREADMEによると、100ms程度に減らすのがおすすめとのこと
+    set updatetime=100
 
     " VS CodeのようにCtrl+BでNERDTreeを開閉する
     nnoremap <C-b> :NERDTreeToggle<CR>
