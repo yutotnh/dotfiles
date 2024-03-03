@@ -15,7 +15,9 @@ brew "lv"
 brew "nkf"
 brew "ripgrep"
 brew "rustup-init"
-brew "source-highlight"
+# Macでインストール時にエラーが出るためコメントアウト
+# インストールをしなくてもbatとかで代用できるため問題にならない
+# brew "source-highlight"
 brew "starship"
 brew "vim"
 brew "xclip"
