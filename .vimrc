@@ -153,11 +153,16 @@ if exists('$DOTFILES_DIRECTORY')
         Plug 'vim-airline/vim-airline'
         Plug 'preservim/nerdtree'
         Plug 'tyru/caw.vim'
+        Plug 'nathanaelkane/vim-indent-guides'
     call plug#end()
 
     let g:lsp_settings_servers_dir = $DOTFILES_DIRECTORY . '/.vim/vim-lsp-settings/servers'
+
     let g:airline#extensions#tabline#enabled = 1
     let g:airline_powerline_fonts = 1
+
+    let g:indent_guides_enable_on_vim_startup = 1
+    let g:indent_guides_guide_size = 1
 
     " dotfilesを表示する
     let NERDTreeShowHidden=1
