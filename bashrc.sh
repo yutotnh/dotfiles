@@ -23,21 +23,23 @@ else
     # starshipがインストールされていないときは、プロンプトをある程度カスタマイズする
     # モチベーションは直前のコマンドの終了ステータス(成功か失敗か)を常に把握したいため
 
-    # 直前のコマンドの終了ステータスによって、プロンプトの色を変える
+    # 直前のコマンドの終了ステータスを表示する
+    # 本当は$の色を変えたいけれど履歴を遡ると表示がおかしくなるため、1行目に終了コードを表示する
     # 0: 緑、それ以外: 赤
-    function prompt_color() {
-        local status=$?
-        if [ $status -eq 0 ]; then
-            printf '\e[0;32m'
+    # 出力: "(終了コード)"
+    function exit_code_prompt() {
+        local status=${?}
+        if [ ${status} -eq 0 ]; then
+            printf '\e[0;32m(%d)\e[0m' ${status}
         else
-            printf '\e[0;31m'
+            printf '\e[0;31m(%d)\e[0m' ${status}
         fi
     }
 
     # 以下のようなプロンプトにする
-    #   user@host full_path
+    #   (0) user@host full_path
     #   $
-    export PS1='\[\e[0;32m\]\u\[\e[0m\]@\[\e[0;32m\]\h\[\e[0m\] \[\e[0;34m\]\w\[\e[0m\]\n$(prompt_color)\$\[\e[0m\] '
+    export PS1='$(exit_code_prompt) \[\e[0;32m\]\u\[\e[0m\]@\[\e[0;32m\]\h\[\e[0m\] \[\e[0;34m\]\w\[\e[0m\]\n\$ '
     # あまりにも長いパスを表示すると見づらいので、4階層まで表示する
     export PROMPT_DIRTRIM=4
 fi
