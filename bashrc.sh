@@ -37,11 +37,10 @@ else
     }
 
     # 以下のようなプロンプトにする
-    #   (0) user@host full_path
+    #   (0) user@host
+    #   full_path
     #   $
-    export PS1='$(exit_code_prompt) \[\e[0;32m\]\u\[\e[0m\]@\[\e[0;32m\]\h\[\e[0m\] \[\e[0;34m\]\w\[\e[0m\]\n\$ '
-    # あまりにも長いパスを表示すると見づらいので、4階層まで表示する
-    export PROMPT_DIRTRIM=4
+    export PS1='$(exit_code_prompt) \[\e[0;32m\]\u\[\e[0m\]@\[\e[0;32m\]\h\[\e[0m\] \[\e[0;34m\]\n\w\[\e[0m\]\n\$ '
 fi
 
 if type zoxide &>/dev/null; then
