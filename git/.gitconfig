@@ -6,7 +6,12 @@
 	defaultBranch = main
 
 [push]
+	# デフォルトでpushするときに、現在のブランチを追跡する
 	autoSetupRemote = true
+
+[pull]
+	# pullするときに、fast-forwardでないマージをするときはエラーにする
+	ff = only
 
 [grep]
 	lineNumber = true
@@ -14,6 +19,10 @@
 [core]
 	# 日本語のファイル名やディレクトリ名の文字化けを防ぐ
 	quotepath = false
+	# ファイル名の大文字小文字を区別する
+	ignorecase = false
+	# 改行コードを自動で変換しない
+	autocrlf = false
 
 [alias]
 	# よく使うコマンドのエイリアス
@@ -21,11 +30,6 @@
 	# そのため、短いエイリアスを設定して補完しやすくする
 	s = status --short # shortの情報で十分な場合が多いため、--shortをデフォルトにする
 	c = commit
-
-	# clone時にサブモジュールも再帰的にcloneする
-	# 忘れた時が面倒で、毎回調べるのも面倒なのでエイリアスを設定
-	# デメリットとして、サブモジュールが多いリポジトリの場合、cloneに時間がかかる
-	clone = clone --recurse-submodules
 
 [commit]
 	gpgsign = true
