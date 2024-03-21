@@ -50,7 +50,7 @@ format = ", [$symbol($version)]($style)"
 [directory]
 truncation_length = 0
 truncate_to_repo = false
-format = "\n[$path]($style)[$read_only]($read_only_style) "
+format = "\n[$path]($style)[$read_only]($read_only_style)"
 read_only = " 󰌾"
 
 [docker_context]
@@ -271,7 +271,7 @@ format = ", [$symbol$shell]($style)"
 
 [shlvl]
 disabled = false
-format = '[$symbol$shlvl]($style) '
+format = ', [$symbol$shlvl]($style)'
 symbol = " "
 threshold = 1
 
