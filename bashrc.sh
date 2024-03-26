@@ -37,10 +37,11 @@ else
     }
 
     # 以下のようなプロンプトにする
+    #                     # 直前のコマンドとプロンプトの境目がわかりやすいように空行を入れる
     #   (0) user@host
     #   full_path
     #   $
-    export PS1='$(exit_code_prompt) \[\e[0;32m\]\u\[\e[0m\]@\[\e[0;32m\]\h\[\e[0m\] \[\e[0;34m\]\n\w\[\e[0m\]\n\$ '
+    export PS1='\n$(exit_code_prompt) \[\e[0;32m\]\u\[\e[0m\]@\[\e[0;32m\]\h\[\e[0m\] \[\e[0;34m\]\n\w\[\e[0m\]\n\$ '
 fi
 
 if type zoxide &>/dev/null; then
