@@ -57,6 +57,7 @@ if type brew &>/dev/null; then
     for COMPLETION in "${HOMEBREW_PREFIX}/etc/bash_completion.d/"*; do
         [[ -r "${COMPLETION}" ]] && source "${COMPLETION}"
     done
+    unset COMPLETION
 
     unset HOMEBREW_PREFIX
 fi
