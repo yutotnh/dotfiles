@@ -23,7 +23,6 @@ for i in {1..9}; do
 done
 
 alias cat='bat --paging never --style plain'
-alias cd='z'
 alias e='eza --long --all --icons --time-style iso --ignore-glob ".git"'
 alias et='eza --long --all --icons --time-style iso --sort newest --ignore-glob ".git"'
 alias exit='exit 0'
