@@ -150,7 +150,7 @@ if type fzf &>/dev/null; then
 
     export FZF_CTRL_T_COMMAND="${FZF_DEFAULT_COMMAND}"
     if type bat &>/dev/null; then
-        export FZF_CTRL_T_OPTS='--preview "bat --style=numbers --color=always --line-range :500 {}"'
+        export FZF_CTRL_T_OPTS='--bind "ctrl-/:change-preview-window(hidden|)" --preview "bat --style=numbers --color=always --line-range :500 {}"'
     else
         export FZF_CTRL_T_OPTS='--preview "head -n 500 {}"'
     fi
@@ -166,17 +166,24 @@ if type fzf &>/dev/null; then
     fi
 
     if type eza &>/dev/null; then
-        export FZF_ALT_C_OPTS='--preview "eza --all --long --tree --level 3 --time-style=iso {}"'
+        export FZF_DIR_PREVIEW="eza --all --git-ignore --long --no-user --no-permissions --tree --level 3 --time-style=iso --color always --group-directories-first"
     elif type tree &>/dev/null; then
-        export FZF_ALT_C_OPTS='--preview "tree -C -L 3 -a -l --timefmt %F {}"'
+        export FZF_DIR_PREVIEW="tree -C -L 3 -a -l --timefmt %F --dirsfirst --gitignore -I .git"
     else
-        export FZF_ALT_C_OPTS='--preview "ls -l --time-style=iso {}"'
+        export FZF_DIR_PREVIEW="ls --almost-all -l --time-style=iso --no-group --color=always --group-directories-first"
     fi
+    export FZF_ALT_C_OPTS="--preview '${FZF_DIR_PREVIEW} {}' --bind 'ctrl-/:change-preview-window(hidden|)'"
 fi
 
 if type vim &>/dev/null; then
     export MYVIMRC="${DOTFILES_DIRECTORY}/.vimrc"
     export VIMINIT="source ${MYVIMRC}"
+fi
+
+if type zoxide &>/dev/null; then
+    if type fzf &>/dev/null; then
+        export _ZO_FZF_OPTS="--reverse --exit-0 --bind 'ctrl-z:ignore,btab:up,tab:down,ctrl-/:change-preview-window(hidden|)' --preview '${FZF_DIR_PREVIEW} {2}'"
+    fi
 fi
 
 shopt -s autocd      # cdコマンドに引数がないときに、カレントディレクトリを表示する
