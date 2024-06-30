@@ -166,7 +166,7 @@ if type fzf &>/dev/null; then
     fi
 
     if type eza &>/dev/null; then
-        export FZF_DIR_PREVIEW="eza --all --git-ignore --long --no-user --no-permissions --tree --level 3 --time-style=iso --color always --group-directories-first"
+        export FZF_DIR_PREVIEW="eza --all --git-ignore --ignore-glob '.git' --long --no-filesize --no-user --no-permissions --tree --level 3 --time-style=iso --color always --group-directories-first"
     elif type tree &>/dev/null; then
         export FZF_DIR_PREVIEW="tree -C -L 3 -a -l --timefmt %F --dirsfirst --gitignore -I .git"
     else
@@ -182,7 +182,7 @@ fi
 
 if type zoxide &>/dev/null; then
     if type fzf &>/dev/null; then
-        export _ZO_FZF_OPTS="--reverse --exit-0 --bind 'ctrl-z:ignore,btab:up,tab:down,ctrl-/:change-preview-window(hidden|)' --preview '${FZF_DIR_PREVIEW} {2}'"
+        export _ZO_FZF_OPTS="--preview-window border-left --reverse --exit-0 --bind 'ctrl-z:ignore,btab:up,tab:down,ctrl-/:change-preview-window(hidden|)' --preview '${FZF_DIR_PREVIEW} {2}'"
     fi
 fi
 
