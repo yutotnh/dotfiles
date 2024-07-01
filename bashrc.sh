@@ -152,9 +152,17 @@ if type fzf &>/dev/null; then
 
     export FZF_CTRL_T_COMMAND="${FZF_DEFAULT_COMMAND}"
     if type bat &>/dev/null; then
-        export FZF_CTRL_T_OPTS='--bind "ctrl-/:change-preview-window(hidden|)" --preview "bat --style=numbers --color=always --line-range :500 {}"'
+        if type lv &>/dev/null; then
+            export FZF_CTRL_T_OPTS='--bind "ctrl-/:change-preview-window(hidden|)" --preview "lv {} | bat --style=numbers --color=always --line-range :500 --file-name {}"'
+        else
+            export FZF_CTRL_T_OPTS='--bind "ctrl-/:change-preview-window(hidden|)" --preview "bat --style=numbers --color=always --line-range :500 {}"'
+        fi
     else
-        export FZF_CTRL_T_OPTS='--preview "head -n 500 {}"'
+        if type lv &>/dev/null; then
+            export FZF_CTRL_T_OPTS='--preview "head -n 500 {} | lv"'
+        else
+            export FZF_CTRL_T_OPTS='--preview "head -n 500"'
+        fi
     fi
 
     # FZF_CTRL_R_COMMAND は存在しないので、FZF_DEFAULT_OPTSからヘッダーを除き、ヘッダーを別途指定する
@@ -168,7 +176,7 @@ if type fzf &>/dev/null; then
     fi
 
     if type eza &>/dev/null; then
-        export FZF_DIR_PREVIEW="eza --all --git-ignore --ignore-glob '.git' --long --no-filesize --no-user --no-permissions --tree --level 3 --time-style=iso --color always --group-directories-first"
+        export FZF_DIR_PREVIEW="eza --icons --all --git-ignore --ignore-glob '.git' --long --no-filesize --no-user --no-permissions --tree --level 3 --time-style=iso --color always --group-directories-first"
     elif type tree &>/dev/null; then
         export FZF_DIR_PREVIEW="tree -C -L 3 -a -l --timefmt %F --dirsfirst --gitignore -I .git"
     else
