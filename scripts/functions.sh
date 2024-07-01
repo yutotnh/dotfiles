@@ -71,4 +71,8 @@ function _find_previous_near_date_directory() {
             break
         fi
     done
+
+    # 今日以前で最も今日に近い日付のディレクトリがない場合は標準出力に何も出力しない
+    # 標準エラー出力にエラーメッセージを出力する
+    echo "No directory found." >&2
 }
