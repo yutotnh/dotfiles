@@ -52,7 +52,7 @@ unset -f alias
 
 ##
 # @brief cdのエイリアスを作成する
-function set_cd_alias() {
+function set_cd_aliases() {
     # 本関数で使用する全ての変数のスコープを関数内に限定する
     local i
     local dir
@@ -78,4 +78,4 @@ function set_cd_alias() {
 
 set_cd_alias
 
-unset -f set_cd_aliasa4
+unset -f set_cd_aliases
