@@ -11,17 +11,6 @@ function alias() {
     fi
 }
 
-alias ..='cd .. && pwd'
-
-# 以下のようなエイリアスを作成する
-# ..1 => cd ../ && pwd
-# ..2 => cd ../../ && pwd
-for i in {1..9}; do
-    dir=$(printf "%${i}s" | sed "s! !../!g")
-    # shellcheck disable=SC2139
-    alias "..${i}"="cd ${dir} && pwd"
-done
-
 alias cat='bat --paging never --style plain'
 alias cd-nearest='cd "$(_find_previous_near_date_directory)"'
 alias e='eza --long --all --icons --time-style iso --ignore-glob ".git" --group-directories-first'
@@ -59,4 +48,34 @@ if uname -r | grep -qi microsoft; then
     builtin alias code='/mnt/c/Users/*/AppData/Local/Programs/Microsoft\ VS\ Code/bin/code'
 fi
 
-unset alias
+unset -f alias
+
+##
+# @brief cdのエイリアスを作成する
+function set_cd_aliases() {
+    # 本関数で使用する全ての変数のスコープを関数内に限定する
+    local i
+    local dir
+
+    # 以下のようなエイリアスを作成する (1 <= i <= 9)
+    # ..1 => cd ../ && pwd
+    # ..2 => cd ../../ && pwd
+    for i in {1..9}; do
+        dir=$(printf "%${i}s" | sed "s! !../!g")
+        # shellcheck disable=SC2139
+        builtin alias "..${i}"="cd ${dir} && pwd"
+    done
+
+    # 以下のようなエイリアスを作成する (1 <= i <= 9)
+    # .. => cd ../ && pwd
+    # ... => cd ../../ && pwd
+    for i in {1..9}; do
+        dir=$(printf "%${i}s" | sed "s! !../!g")
+        # shellcheck disable=SC2139
+        builtin alias "$(printf ".%${i}s" | sed "s! !.!g")"="cd ${dir} && pwd"
+    done
+}
+
+set_cd_aliases
+
+unset -f set_cd_aliases
