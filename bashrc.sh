@@ -68,7 +68,9 @@ fi
 
 export HISTFILESIZE=100000
 export HISTSIZE=100000
+# 履歴に時刻を表示する
 export HISTTIMEFORMAT='%F %T '
+# 空白から始まるコマンドと連続する重複するコマンドを履歴に追加しない
 export HISTCONTROL=ignoreboth
 # 本dotfilesを読み込まずHISTSIZEがデフォルト値になったとき、~\/.bash_historyが上書きされて過去の履歴が消えるのを防ぐために、
 # 本dotfilesを読み込んだときは別の場所に.bash_historyを作成する
@@ -190,7 +192,7 @@ shopt -s autocd      # cdコマンドに引数がないときに、カレント�
 shopt -s cdable_vars # cdコマンドに変数名を指定できるようにする
 shopt -s cdspell     # cdコマンドの引数が間違っているときに、正しい候補を表示する
 shopt -s dirspell    # ディレクトリ名のスペルミスを訂正する
-shopt -s globstar    # **を使って再帰的にマッチングできるようにする
+shopt -s globstar    # `**`を使って再帰的にマッチングできるようにする
 
 # Ctrl+Rで履歴をさかのぼって進みすぎたときにCtrl+Sで戻れるようにする
 # 普通はCtrl+Sは出力停止に割り当てられているので、それを解除する
