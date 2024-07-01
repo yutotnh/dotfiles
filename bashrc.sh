@@ -201,8 +201,12 @@ if [[ -t 0 ]]; then # 標準入力が端末のときだけ実行する(scpなど
     stty start undef
 fi
 
-if [[ -r "${DOTFILES_DIRECTORY}/alias.sh" ]]; then
-    source "${DOTFILES_DIRECTORY}/alias.sh"
+if [[ -r "${DOTFILES_DIRECTORY}/scripts/aliases.sh" ]]; then
+    source "${DOTFILES_DIRECTORY}/scripts/aliases.sh"
+fi
+
+if [[ -r "${DOTFILES_DIRECTORY}/scripts/functions.sh" ]]; then
+    source "${DOTFILES_DIRECTORY}/scripts/functions.sh"
 fi
 
 # 標準出力が端末でないときに下記の処理を実行すると`bind: warning: line editing not enabled`が発生するため、
