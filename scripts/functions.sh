@@ -9,7 +9,7 @@
 # $ mkcd test
 # $ pwd
 # /home/user/test
-function mkcd () {
+function mkcd() {
     # cdするので受け取る引数は1つだけ
     if [ $# -ne 1 ]; then
         echo "Usage: mkcd DIRECTORY"
