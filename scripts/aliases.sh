@@ -76,6 +76,6 @@ function set_cd_aliases() {
     done
 }
 
-set_cd_alias
+set_cd_aliases
 
 unset -f set_cd_aliases
