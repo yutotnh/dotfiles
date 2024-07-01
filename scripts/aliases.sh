@@ -23,7 +23,8 @@ for i in {1..9}; do
 done
 
 alias cat='bat --paging never --style plain'
-alias e='eza --long --all --icons --time-style iso --ignore-glob ".git"'
+alias cd-nearest='cd "$(_find_previous_near_date_directory)"'
+alias e='eza --long --all --icons --time-style iso --ignore-glob ".git" --group-directories-first'
 alias et='eza --long --all --icons --time-style iso --sort newest --ignore-glob ".git"'
 alias exit='exit 0'
 alias g='grep --color=auto'
