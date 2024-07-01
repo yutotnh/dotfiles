@@ -1,5 +1,23 @@
 #!/usr/bin/env bash
 
+# @brief mkdir と cd を同時に行う関数
+#
+# 例:
+# $ pwd
+# /home/user
+# $ ls
+# $ mkcd test
+# $ pwd
+# /home/user/test
+function mkcd() {
+    # cdするので受け取る引数は1つだけ
+    if [ $# -ne 1 ]; then
+        echo "Usage: mkcd DIRECTORY"
+        return 1
+    fi
+    mkdir -p "${1}" && cd "${1}" || return
+}
+
 #
 # カレントディレクトリ以下の今日以前で最も今日に近いISO 8601の日付形式のディレクトリ名を返す
 #
