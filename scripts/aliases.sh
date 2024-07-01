@@ -2,7 +2,13 @@
 
 ##
 # @brief alias で実行するコマンドが存在するときのみ、 alias に登録する関数
+# @param ALIAS=COMMAND
 function alias() {
+    if [ $# -ne 1 ]; then
+        echo "Usage: alias ALIAS=COMMAND"
+        return 1
+    fi
+
     local command
     command=$(echo "${1}" | grep -o "\=[^[:space:]]*" | sed 's/\=//' | head -1)
 
