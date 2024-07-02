@@ -85,3 +85,17 @@ function set_cd_aliases() {
 set_cd_aliases
 
 unset -f set_cd_aliases
+
+# lsにエイリアスを設定しているエイリアスを補完する
+complete -F _comp_complete_longopt_ls l
+complete -F _comp_complete_longopt_ls la
+complete -F _comp_complete_longopt_ls ll
+complete -F _comp_complete_longopt_ls lt
+complete -F _comp_complete_longopt_ls sl
+
+# ezaにエイリアスを設定しているエイリアスを補完する
+complete -o bashdefault -o filenames -F _eza e
+complete -o bashdefault -o filenames -F _eza et
+
+# grepにエイリアスを設定しているエイリアスを補完する
+complete -F _comp_complete_longopt_grep g

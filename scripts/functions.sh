@@ -76,3 +76,21 @@ function _find_previous_near_date_directory() {
     # 標準エラー出力にエラーメッセージを出力する
     echo "No directory found." >&2
 }
+
+#
+# @brief lsのオプションを補完する関数
+function _comp_complete_longopt_ls() {
+    # 本当はlsと"$@"を組み合わせた形で補完を行いたいが、
+    # completeの引数の仕様がよくわからないため、とりあえずlsのオプションのみを指定する
+    # 不都合があれば、しっかりと調査して修正する
+    _comp_complete_longopt ls
+}
+
+#
+# @brief grepのオプションを補完する関数
+function _comp_complete_longopt_grep() {
+    # 本当はlsと"$@"を組み合わせた形で補完を行いたいが、
+    # completeの引数の仕様がよくわからないため、とりあえずlsのオプションのみを指定する
+    # 不都合があれば、しっかりと調査して修正する
+    _comp_complete_longopt grep
+}
