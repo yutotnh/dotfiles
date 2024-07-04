@@ -27,3 +27,6 @@ set show-all-if-ambiguous on
 
 # 実行ファイルに*を付ける
 set visible-stats on
+
+# Ctrl+Backspaceで単語を削除する
+"\C-h": backward-kill-word
