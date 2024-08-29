@@ -292,6 +292,8 @@ symbol = " "
 format = ", [$symbol$workspace]($style)"
 
 [time]
+disabled = false
+time_format = "%Y-%m-%dT%H:%M:%S"
 format = ", [$time]($style)"
 
 [username]
