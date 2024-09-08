@@ -110,6 +110,7 @@
     "runtimepath",
     "rustc",
     "rustup",
+    "setaf",
     "shellenv",
     "shiftwidth",
     "shlvl",
