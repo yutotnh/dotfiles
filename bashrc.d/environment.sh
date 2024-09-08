@@ -12,25 +12,33 @@ else
     # starshipがインストールされていないときは、プロンプトをある程度カスタマイズする
     # モチベーションは直前のコマンドの終了ステータス(成功か失敗か)を常に把握したいため
 
+    _reset="$(tput sgr0)"
+    _red="$(tput setaf 1)"
+    _green="$(tput setaf 2)"
+    _blue="$(tput setaf 4)"
+
     # 直前のコマンドの終了ステータスを表示する
     # 本当は$の色を変えたいけれど履歴を遡ると表示がおかしくなるため、1行目に終了コードを表示する
     # 0: 緑、それ以外: 赤
     # 出力: "(終了コード)"
-    function _exit_code_prompt() {
+    function _prompt_color() {
         local status=${?}
+        local color
         if [ ${status} -eq 0 ]; then
-            printf '\e[0;32m(%d)\e[0m' ${status}
+            color=${_green}
         else
-            printf '\e[0;31m(%d)\e[0m' ${status}
+            color=${_red}
         fi
+
+        echo -n "${color}"
     }
 
     # 以下のようなプロンプトにする
     #                     # 直前のコマンドとプロンプトの境目がわかりやすいように空行を入れる
-    #   (0) user@host 2000-01-01T00:00:00
+    #   user@host 2000-01-01T00:00:00
     #   full_path
     #   $
-    export PS1='\n$(_exit_code_prompt) \[\e[0;32m\]\u\[\e[0m\]@\[\e[0;32m\]\h\[\e[0m\] \D{%Y-%m-%dT%H:T%M:%S}\n\[\e[0;34m\]\w\[\e[0m\]\n\$ '
+    export PS1='\n${_green}\u${_reset}@${_green}\h${_reset} \D{%Y-%m-%dT%H:T%M:%S}\n${_blue}\w${_reset}\n$(_prompt_color)\$${_reset} '
 fi
 
 if type zoxide &>/dev/null; then
