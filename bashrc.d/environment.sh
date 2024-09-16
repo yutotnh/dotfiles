@@ -20,15 +20,17 @@ else
     _green="\001$(tput setaf 2)\002"
     _blue="\001$(tput setaf 4)\002"
 
-    function _prompt_by_exit_code() {
+    function _color_by_exit_code() {
+        local exit_code="${?}"
+
         # macのrootだと、echo -nでの改行なしができないため、printfで行う
         # `print %s ${_green}`だと、\001, \002がうまく機能しないので、直接printfしている
-        if [ "${?}" -eq "0" ]; then
+        if [ "${exit_code}" -eq "0" ]; then
             # shellcheck disable=SC2059
-            printf "${_green}\$${_reset}"
+            printf "${_green}"
         else
             # shellcheck disable=SC2059
-            printf "${_red}\$${_reset}"
+            printf "${_red}"
         fi
     }
 
@@ -40,7 +42,7 @@ else
     export PS1="\n"
     export PS1+="${_green}\u${_reset}@${_green}\h${_reset} \D{%Y-%m-%dT%H:T%M:%S}\n"
     export PS1+="${_blue}\w${_reset}\n"
-    export PS1+='$(_prompt_by_exit_code) '
+    export PS1+='$(_color_by_exit_code)\$'"${_reset} "
 fi
 
 if type zoxide &>/dev/null; then
