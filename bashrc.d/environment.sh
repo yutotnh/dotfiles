@@ -12,33 +12,35 @@ else
     # starshipがインストールされていないときは、プロンプトをある程度カスタマイズする
     # モチベーションは直前のコマンドの終了ステータス(成功か失敗か)を常に把握したいため
 
-    _reset="$(tput sgr0)"
-    _red="$(tput setaf 1)"
-    _green="$(tput setaf 2)"
-    _blue="$(tput setaf 4)"
+    # "\001"と"\002をつけることで、エスケープシーケンスの部分は文字数に数えられなくなる(っぽい)
+    # PS1で直接変数を利用する場合は"\001"は"\["に、"\002"は"\]"に置き換え可能だが、
+    # これらは関数内部で使うと動作しないため、"\001"と"\002"を使っている
+    _reset="\001$(tput sgr0)\002"
+    _red="\001$(tput setaf 1)\002"
+    _green="\001$(tput setaf 2)\002"
+    _blue="\001$(tput setaf 4)\002"
 
-    # 直前のコマンドの終了ステータスを表示する
-    # 本当は$の色を変えたいけれど履歴を遡ると表示がおかしくなるため、1行目に終了コードを表示する
-    # 0: 緑、それ以外: 赤
-    # 出力: "(終了コード)"
-    function _prompt_color() {
-        local status=${?}
-        local color
-        if [ ${status} -eq 0 ]; then
-            color=${_green}
+    function _prompt_by_exit_code() {
+        # macのrootだと、echo -nでの改行なしができないため、printfで行う
+        # `print %s ${_green}`だと、\001, \002がうまく機能しないので、直接printfしている
+        if [ "${?}" -eq "0" ]; then
+            # shellcheck disable=SC2059
+            printf "${_green}\$${_reset}"
         else
-            color=${_red}
+            # shellcheck disable=SC2059
+            printf "${_red}\$${_reset}"
         fi
-
-        echo -n "${color}"
     }
 
     # 以下のようなプロンプトにする
     #                     # 直前のコマンドとプロンプトの境目がわかりやすいように空行を入れる
     #   user@host 2000-01-01T00:00:00
     #   full_path
-    #   $
-    export PS1='\n${_green}\u${_reset}@${_green}\h${_reset} \D{%Y-%m-%dT%H:T%M:%S}\n${_blue}\w${_reset}\n$(_prompt_color)\$${_reset} '
+    #   $                 # 終了コードが0: 緑色、それ以外: 赤色
+    export PS1="\n"
+    export PS1+="${_green}\u${_reset}@${_green}\h${_reset} \D{%Y-%m-%dT%H:T%M:%S}\n"
+    export PS1+="${_blue}\w${_reset}\n"
+    export PS1+='$(_prompt_by_exit_code) '
 fi
 
 if type zoxide &>/dev/null; then
