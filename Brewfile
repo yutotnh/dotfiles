@@ -23,6 +23,8 @@ brew "gitui"
 brew "icdiff"
 # Lightweight and flexible command-line JSON processor
 brew "jq"
+# Pager program similar to more
+brew "less"
 # Powerful multi-lingual file viewer/grep
 brew "lv"
 # Network Kanji code conversion Filter (NKF)
