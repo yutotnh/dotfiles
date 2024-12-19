@@ -61,7 +61,13 @@ export HISTFILE="${DOTFILES_DIRECTORY}/.bash_history"
 
 if type less &>/dev/null; then
     # batで内部的にlessを使うときにless部分の行番号を表示したくないので、--LINE-NUMBERSを指定しない(aliasで設定する)
-    export LESS='--RAW-CONTROL-CHARS --LONG-PROMPT --hilite-search --IGNORE-CASE --no-init --mouse --use-color'
+    export LESS='--RAW-CONTROL-CHARS --LONG-PROMPT --hilite-search --IGNORE-CASE --no-init'
+    if ! less --mouse |& grep -q "There is no mouse option"; then
+        LESS+=" --mouse"
+    fi
+    if ! less --use-color |& grep -q "There is no use-color option"; then
+        LESS+=" --use-color"
+    fi
 
     if type src-hilite-lesspipe.sh &>/dev/null; then
         export LESSOPEN='|src-hilite-lesspipe.sh %s'
