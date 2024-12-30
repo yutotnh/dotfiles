@@ -175,6 +175,11 @@ if type git &>/dev/null; then
     export GIT_CONFIG_GLOBAL="${DOTFILES_DIRECTORY}/git/.gitconfig"
 fi
 
+if type gpg &>/dev/null; then
+    GPG_TTY=$(tty)
+    export GPG_TTY
+fi
+
 # LANG=ja_JP.UTF-8が設定できる環境では、LANG=ja_JP.UTF-8を設定する
 # `locale -a`で出てくる物は正規化されているので、UTF-8ではなくutf8になっている
 if locale -a 2>/dev/null | grep -qF 'ja_JP.utf8'; then
