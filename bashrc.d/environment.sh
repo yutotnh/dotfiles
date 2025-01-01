@@ -55,7 +55,7 @@ export HISTSIZE=100000
 export HISTTIMEFORMAT='%F %T '
 # 空白から始まるコマンドと連続する重複するコマンドを履歴に追加しない
 export HISTCONTROL=ignoreboth
-# 本dotfilesを読み込まずHISTSIZEがデフォルト値になったとき、~\/.bash_historyが上書きされて過去の履歴が消えるのを防ぐために、
+# 本dotfilesを読み込まずHISTSIZEがデフォルト値になったとき、~/.bash_historyが上書きされて過去の履歴が消えるのを防ぐために、
 # 本dotfilesを読み込んだときは別の場所に.bash_historyを作成する
 export HISTFILE="${DOTFILES_DIRECTORY}/.bash_history"
 
