@@ -62,10 +62,10 @@ export HISTFILE="${DOTFILES_DIRECTORY}/.bash_history"
 if type less &>/dev/null; then
     # batで内部的にlessを使うときにless部分の行番号を表示したくないので、--LINE-NUMBERSを指定しない(aliasで設定する)
     export LESS='--RAW-CONTROL-CHARS --LONG-PROMPT --hilite-search --IGNORE-CASE --no-init'
-    if ! less --mouse |& grep -q "There is no mouse option"; then
+    if less --help |& grep -q -- "--mouse"; then
         LESS+=" --mouse"
     fi
-    if ! less --use-color |& grep -q "There is no use-color option"; then
+    if less --help |& grep -q -- "--use-color"; then
         LESS+=" --use-color"
     fi
 
