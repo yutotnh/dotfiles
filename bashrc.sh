@@ -12,6 +12,11 @@ test -d /opt/homebrew/ && eval $(/opt/homebrew/bin/brew shellenv)
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
 
 if type brew &>/dev/null; then
+    # LANG=ja_JP.UTF-8の状態で補完するためのファイルを読み込むと、setlocaleのエラーが出る場合がある
+    # そのため、ファイルを読み込む前後はLANG=Cとする
+    BACKUP_LANG=${LANG}
+    LANG=C
+
     HOMEBREW_PREFIX="$(brew --prefix)"
     if [[ -r "${HOMEBREW_PREFIX}/etc/profile.d/bash_completion.sh" ]]; then
         source "${HOMEBREW_PREFIX}/etc/profile.d/bash_completion.sh"
@@ -23,6 +28,9 @@ if type brew &>/dev/null; then
     unset COMPLETION
 
     unset HOMEBREW_PREFIX
+
+    LANG=${BACKUP_LANG}
+    unset BACKUP_LANG
 fi
 
 if type rustc &>/dev/null; then

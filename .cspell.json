@@ -111,6 +111,7 @@
     "rustc",
     "rustup",
     "setaf",
+    "setlocale",
     "shellenv",
     "shiftwidth",
     "shlvl",
