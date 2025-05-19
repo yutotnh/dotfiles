@@ -20,6 +20,42 @@ function mkcd() {
 }
 
 #
+# @brief 与えられたパスがファイルならその親ディレクトリに移動する
+#                        ディレクトリならそのディレクトリに移動する
+#
+# @param $1 パス
+#
+# 例
+# $ pwd
+# /home/user
+# $ ls
+# $ cd-foolish test
+# $ pwd
+# /home/user/test
+# $ cd -
+# $ pwd
+# /home/user
+# $ cd-foolish test/test.txt
+# $ pwd
+# /home/user/test
+function cd-foolish() {
+    # 引数が1つでない場合はエラーメッセージを出力して終了
+    if [ $# -ne 1 ]; then
+        echo "Usage: cd-foolish PATH"
+        return 1
+    fi
+
+    # 引数がファイルならそのファイルの親ディレクトリに移動
+    if [ -f "$1" ]; then
+        cd "$(dirname "$1")" || return
+    # それ以外の場合は単に引数のディレクトリに移動
+    # elseにすることで、ファイルでもディレクトリでもない場合などのエラーハンドリングもcdに任せる
+    else
+        cd "$1" || return
+    fi
+}
+
+#
 # @brief カレントディレクトリ以下の今日以前で最も今日に近いISO 8601の日付形式のディレクトリ名を返す
 #
 # 例1: 今日の日付のディレクトリがない場合
