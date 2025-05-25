@@ -105,7 +105,7 @@ function _find_previous_near_date_directory() {
         # 日付の大きい順にソートしているので、数値の大小で比較し、同じか小さい場合にそのディレクトリを返す
         if [[ "${normalized_date_dir}" -le "${normalized_today}" ]]; then
             echo "${date_dir}"
-            break
+            return
         fi
     done
 
