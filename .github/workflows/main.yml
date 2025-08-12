@@ -16,7 +16,7 @@ jobs:
         container: ["rockylinux:9", "ubuntu:latest"]
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Set up
         run: |
@@ -40,7 +40,7 @@ jobs:
     runs-on: macos-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Install
         uses: ./.github/workflows/install
