@@ -29,9 +29,19 @@ if ! type nix &>/dev/null; then
         # CIのコンテナ環境ではrootユーザーで実行しており、sudoコマンドが存在しないことがある
         # single-userインストーラーはrootで実行していても/nixの作成にsudoを使おうとするため、
         # 事前にrootのまま/nixを作成しておくことでsudoを不要にする
-        if [[ ! -e /nix ]] && [[ "$(id -u)" -eq 0 ]]; then
-            mkdir -m 0755 /nix
-            chown root /nix
+        # また、rootでのsingle-userインストールは公式にはサポートされておらず、
+        # 存在しないnixbldグループを要求してインストールに失敗するため、
+        # build-users-groupを空にすることでnixbldグループを不要にする
+        # 参考: https://github.com/NixOS/nix/issues/1559
+        if [[ "$(id -u)" -eq 0 ]]; then
+            if [[ ! -e /nix ]]; then
+                mkdir -m 0755 /nix
+                chown root /nix
+            fi
+            mkdir -p /etc/nix
+            if ! grep -qF "build-users-group" /etc/nix/nix.conf 2>/dev/null; then
+                echo "build-users-group =" >>/etc/nix/nix.conf
+            fi
         fi
         sh <(curl -L https://nixos.org/nix/install) --no-daemon --yes
     fi
