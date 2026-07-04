@@ -4,33 +4,31 @@
 DOTFILES_DIRECTORY="$(dirname "$(realpath "${BASH_SOURCE:-0}")")"
 export DOTFILES_DIRECTORY
 
-# Set PATH, MANPATH, etc., for Homebrew.
-test -d ~/.linuxbrew && eval $(~/.linuxbrew/bin/brew shellenv)
-test -d /home/linuxbrew/.linuxbrew && eval $(/home/linuxbrew/.linuxbrew/bin/brew shellenv)
-test -d /opt/homebrew/ && eval $(/opt/homebrew/bin/brew shellenv)
+# Set PATH, MANPATH, etc., for Nix.
+#   single-user
+[[ -r ~/.nix-profile/etc/profile.d/nix.sh ]] && source ~/.nix-profile/etc/profile.d/nix.sh
+#   multi-user(daemon)
+[[ -r /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh ]] && source /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
 
-[ -f ~/.fzf.bash ] && source ~/.fzf.bash
+# LANG=ja_JP.UTF-8の状態でnixのコマンドを実行すると、setlocaleのエラーが出る場合がある
+# nixpkgsのglibcLocalesが提供するlocale-archiveをLOCALE_ARCHIVEに設定することでエラーを回避する
+if [[ -r ~/.nix-profile/lib/locale/locale-archive ]]; then
+    export LOCALE_ARCHIVE=~/.nix-profile/lib/locale/locale-archive
+fi
 
-if type brew &>/dev/null; then
-    # LANG=ja_JP.UTF-8の状態で補完するためのファイルを読み込むと、setlocaleのエラーが出る場合がある
-    # そのため、ファイルを読み込む前後はLANG=Cとする
-    BACKUP_LANG=${LANG}
-    LANG=C
-
-    HOMEBREW_PREFIX="$(brew --prefix)"
-    if [[ -r "${HOMEBREW_PREFIX}/etc/profile.d/bash_completion.sh" ]]; then
-        source "${HOMEBREW_PREFIX}/etc/profile.d/bash_completion.sh"
+if type nix &>/dev/null; then
+    if [[ -r ~/.nix-profile/etc/profile.d/bash_completion.sh ]]; then
+        source ~/.nix-profile/etc/profile.d/bash_completion.sh
     fi
 
-    for COMPLETION in "${HOMEBREW_PREFIX}/etc/bash_completion.d/"*; do
+    for COMPLETION in ~/.nix-profile/share/bash-completion/completions/*; do
         [[ -r "${COMPLETION}" ]] && source "${COMPLETION}"
     done
     unset COMPLETION
+fi
 
-    unset HOMEBREW_PREFIX
-
-    LANG=${BACKUP_LANG}
-    unset BACKUP_LANG
+if type fzf &>/dev/null; then
+    eval "$(fzf --bash)"
 fi
 
 if type rustc &>/dev/null; then
@@ -38,9 +36,9 @@ if type rustc &>/dev/null; then
 fi
 
 if type git &>/dev/null; then
-    # gitの補完はbrewでインストールした場合は他の補完を有効にするときに一緒に有効になる
-    # そのため、ここではbrewのgitの補完は有効にしない
-    # brewでインストールしていない場合でもUbuntuでは補完が有効になるが、RHEL系では有効にならない
+    # gitの補完はnix profileでインストールした場合は他の補完を有効にするときに一緒に有効になる
+    # そのため、ここではnix profileのgitの補完は有効にしない
+    # nix profileでインストールしていない場合でもUbuntuでは補完が有効になるが、RHEL系では有効にならない
     # そのため、gitの補完が無効のときは有効にする
     # 有効・無効の判定は`__git`が関数として定義されているかどうかとする
     if [ "$(type -t __git)" != "function" ]; then

@@ -46,3 +46,15 @@ WSLのデフォルト設定だと Windows の PATH を引き継いでいる
 `dotfiles/bashrc.sh` 内の bash_completion.sh を実行する箇所でインストールされていないコマンドを探索するときにWindowsのPATHも見ている
 
 WSLからWindowsのディレクトリへのアクセスは非常に遅く、そしてPATHの中に非常にたくさんアクセスしているため実行時間が遅くなっている
+
+### 共有マシンの共有アカウントで使う場合
+
+`install.sh` は実行せず、本リポジトリを clone して `bashrc.sh` を読み込むだけでよい
+
+```bash
+git clone https://github.com/yutotnh/dotfiles.git
+echo '[[ -r "'"$(pwd)"'/dotfiles/bashrc.sh" ]] && source "'"$(pwd)"'/dotfiles/bashrc.sh"' >>~/.bashrc
+```
+
+Nix(や、Nixでインストールしたコマンド)が無い状態でも、`bashrc.sh` はエラーなく読み込まれ、
+Nixに依存しない設定(shopt, 履歴, cdの補助エイリアスなど)は有効になる
