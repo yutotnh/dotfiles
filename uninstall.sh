@@ -2,6 +2,12 @@
 
 SCRIPT_DIRECTORY="$(dirname "$(realpath "${BASH_SOURCE:-0}")")"
 
+# Nix の PATH を通す(非ログインシェルでは~/.bashrcを経由しないため必要)
+#   single-user
+[[ -r "${HOME}/.nix-profile/etc/profile.d/nix.sh" ]] && source "${HOME}/.nix-profile/etc/profile.d/nix.sh"
+#   multi-user(daemon)
+[[ -r /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh ]] && source /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
+
 if type nix &>/dev/null; then
     if nix profile list 2>/dev/null | grep -qF "${SCRIPT_DIRECTORY}"; then
         nix profile remove "${SCRIPT_DIRECTORY}#default" || true
