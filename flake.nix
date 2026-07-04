@@ -40,7 +40,7 @@
               nkf
               ripgrep
               rustup
-              source-highlight
+              sourceHighlight
               starship
               vim
               zoxide
