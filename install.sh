@@ -10,14 +10,11 @@ fi
 
 SCRIPT_DIRECTORY="$(dirname "$(realpath "${BASH_SOURCE:-0}")")"
 
+# nix.confをdotfiles内で管理する
 # rootで実行しているとき、bashの${HOME}(例: コンテナだと/github/home)と、
-# nixがnix.confの検索に使うホームディレクトリ(passwdの/root)がずれることがあるため、
-# rootのときはユーザーごとの設定ではなく、システム全体の設定ファイルを使う
-if [[ "$(id -u)" -eq 0 ]]; then
-    NIX_CONF_FILE=/etc/nix/nix.conf
-else
-    NIX_CONF_FILE="${HOME}/.config/nix/nix.conf"
-fi
+# nixが設定ファイルの検索に使うホームディレクトリ(passwdの/root)がずれることがあるため、
+# ${HOME}を経由しないNIX_USER_CONF_FILESで直接ファイルを指定する
+export NIX_USER_CONF_FILES="${SCRIPT_DIRECTORY}/nix/nix.conf"
 
 # Nix の PATH を通す(既にインストール済みの場合、非ログインシェルでは~/.bashrcを経由しないため必要)
 #   single-user
@@ -38,19 +35,9 @@ if ! type nix &>/dev/null; then
         # CIのコンテナ環境ではrootユーザーで実行しており、sudoコマンドが存在しないことがある
         # single-userインストーラーはrootで実行していても/nixの作成にsudoを使おうとするため、
         # 事前にrootのまま/nixを作成しておくことでsudoを不要にする
-        # また、rootでのsingle-userインストールは公式にはサポートされておらず、
-        # 存在しないnixbldグループを要求してインストールに失敗するため、
-        # build-users-groupを空にすることでnixbldグループを不要にする
-        # 参考: https://github.com/NixOS/nix/issues/1559
-        if [[ "$(id -u)" -eq 0 ]]; then
-            if [[ ! -e /nix ]]; then
-                mkdir -m 0755 /nix
-                chown root /nix
-            fi
-            mkdir -p "$(dirname "${NIX_CONF_FILE}")"
-            if ! grep -qF "build-users-group" "${NIX_CONF_FILE}" 2>/dev/null; then
-                echo "build-users-group =" >>"${NIX_CONF_FILE}"
-            fi
+        if [[ "$(id -u)" -eq 0 ]] && [[ ! -e /nix ]]; then
+            mkdir -m 0755 /nix
+            chown root /nix
         fi
         sh <(curl -L https://nixos.org/nix/install) --no-daemon --yes
     fi
@@ -60,13 +47,6 @@ if ! type nix &>/dev/null; then
     [[ -r "${HOME}/.nix-profile/etc/profile.d/nix.sh" ]] && source "${HOME}/.nix-profile/etc/profile.d/nix.sh"
     #   multi-user(daemon)
     [[ -r /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh ]] && source /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
-fi
-
-##
-# @brief flakes を有効化する
-mkdir -p "$(dirname "${NIX_CONF_FILE}")"
-if ! grep -qF "experimental-features = nix-command flakes" "${NIX_CONF_FILE}" 2>/dev/null; then
-    echo "experimental-features = nix-command flakes" >>"${NIX_CONF_FILE}"
 fi
 
 ##

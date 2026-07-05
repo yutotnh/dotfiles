@@ -2,6 +2,9 @@
 
 SCRIPT_DIRECTORY="$(dirname "$(realpath "${BASH_SOURCE:-0}")")"
 
+# nix.confをdotfiles内で管理する
+export NIX_USER_CONF_FILES="${SCRIPT_DIRECTORY}/nix/nix.conf"
+
 # Nix の PATH を通す(非ログインシェルでは~/.bashrcを経由しないため必要)
 #   single-user
 [[ -r "${HOME}/.nix-profile/etc/profile.d/nix.sh" ]] && source "${HOME}/.nix-profile/etc/profile.d/nix.sh"

@@ -17,6 +17,9 @@ if [[ -r ~/.nix-profile/lib/locale/locale-archive ]]; then
 fi
 
 if type nix &>/dev/null; then
+    # nix.confをdotfiles内で管理する
+    export NIX_USER_CONF_FILES="${DOTFILES_DIRECTORY}/nix/nix.conf"
+
     if [[ -r ~/.nix-profile/etc/profile.d/bash_completion.sh ]]; then
         source ~/.nix-profile/etc/profile.d/bash_completion.sh
     fi

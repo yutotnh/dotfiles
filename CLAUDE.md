@@ -26,6 +26,11 @@ npx cspell .
 `nix profile list` に自分の flake パス文字列が含まれるかで判定)を使い分けて反映する。
 ツールの追加・削除は `flake.nix` の `paths` を編集するだけでよい。
 
+Nix自体の設定(`nix.conf`)も `~/.config/nix/nix.conf` ではなく `nix/nix.conf` としてdotfiles内で
+管理し、`NIX_USER_CONF_FILES` 環境変数(`GIT_CONFIG_GLOBAL`や`MYVIMRC`と同じ発想)で参照させている。
+`install.sh`・`uninstall.sh`・`bashrc.sh` それぞれが個別に `NIX_USER_CONF_FILES` を export する
+必要がある(スクリプトをまたいで永続する状態ではないため)。
+
 ### `bashrc.sh` の graceful-degradation 設計(最重要の制約)
 
 このdotfilesは共有マシンの共有アカウントでも clone されて `bashrc.sh` だけ読み込まれる
