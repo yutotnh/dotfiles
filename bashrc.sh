@@ -23,19 +23,10 @@ if type nix &>/dev/null; then
     if [[ -r ~/.nix-profile/etc/profile.d/bash_completion.sh ]]; then
         source ~/.nix-profile/etc/profile.d/bash_completion.sh
     fi
-
-    for COMPLETION in ~/.nix-profile/share/bash-completion/completions/*; do
-        [[ -r "${COMPLETION}" ]] && source "${COMPLETION}"
-    done
-    unset COMPLETION
 fi
 
 if type fzf &>/dev/null; then
     eval "$(fzf --bash)"
-fi
-
-if type rustc &>/dev/null; then
-    source "$(rustc --print sysroot)/etc/bash_completion.d/cargo"
 fi
 
 if type git &>/dev/null; then
