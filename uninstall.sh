@@ -56,6 +56,12 @@ else
     fi
 
     "${SUDO[@]}" rm -rf /nix
+
+    # /nix以下にあるNix自身が提供するrm等のコマンドをsudo無しで直接実行していた場合、
+    # bashがコマンドのパスを覚えて(hashして)いるため、/nixを削除した直後に同じコマンドを
+    # 実行すると「No such file or directory」になることがある
+    # そのため、hashをクリアしてPATHから再解決させる
+    hash -r
 fi
 
 rm -rf "${HOME}/.nix-profile" "${HOME}/.nix-defexpr" "${HOME}/.nix-channels" "${HOME}/.config/nix" "${HOME}/.cache/nix" "${HOME}/.local/state/nix" "${HOME}/.local/share/nix"
