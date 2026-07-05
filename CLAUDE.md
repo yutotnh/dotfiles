@@ -9,6 +9,15 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ./uninstall.sh  # Nix・導入したパッケージ・~/.bashrcのフックを削除する
 ```
 
+## 作業フロー
+
+バグ修正・機能追加・ドキュメント修正を問わず、変更作業は `git worktree` で作業ディレクトリを
+分離してから行い、完了したら `main` に直接コミットせず PR を作成すること。`main` を常にクリーンな
+状態に保つため。
+
+コミットする前には必ず `npx cspell .` を実行し、指摘があれば解消してからコミットすること。
+cspellのチェックにはよく引っかかるため。
+
 Lint(GitHub ActionsのFormat/Spellワークフローと同じもの):
 
 ```bash
