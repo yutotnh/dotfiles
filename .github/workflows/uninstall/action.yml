@@ -9,11 +9,10 @@ runs:
       shell: bash
       run: |
         set -eu
-        exec bash -l
-        ${DOTFILES_DIRECTORY}/uninstall.sh
-        exec bash -l
-        # Homebrewと、Homebrewでインストールしたコマンド(の内1つ)が存在していないこと確認する
-        if type brew &>/dev/null; then false; fi
-        if type bat &>/dev/null; then false; fi
+        ./uninstall.sh
+
+        # Nixと、Nix profileでインストールしたコマンド(の内1つ)が存在していないこと確認する
+        if bash -c 'source "${HOME}/.bashrc" && type nix' &>/dev/null; then false; fi
+        if bash -c 'source "${HOME}/.bashrc" && type bat' &>/dev/null; then false; fi
         # エイリアスが設定されないことを確認する
-        if alias cat &>/dev/null; then false; fi
+        if bash -c 'source "${HOME}/.bashrc" && alias cat' &>/dev/null; then false; fi

@@ -14,6 +14,9 @@ jobs:
     strategy:
       matrix:
         container: ["rockylinux:9", "ubuntu:latest"]
+    # 未認証のままだとflake.nixのnixpkgs取得時にGitHub APIのレート制限に引っかかることがあるため、認証する
+    env:
+      NIX_CONFIG: "access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}"
 
     steps:
       - uses: actions/checkout@v4
@@ -21,10 +24,9 @@ jobs:
       - name: Set up
         run: |
           if [ "${{ matrix.container }}" = "rockylinux:9" ]; then
-            dnf groupinstall -y "Development Tools"
-            dnf install -y --allowerasing procps-ng curl file git
+            dnf install -y --allowerasing curl xz git
           elif [ "${{ matrix.container }}" = "ubuntu:latest" ]; then
-            apt-get update && apt-get install -y build-essential procps curl file git
+            apt-get update && apt-get install -y curl xz-utils git
           fi
 
       - name: Install
@@ -38,6 +40,9 @@ jobs:
 
   install-macos:
     runs-on: macos-latest
+    # 未認証のままだとflake.nixのnixpkgs取得時にGitHub APIのレート制限に引っかかることがあるため、認証する
+    env:
+      NIX_CONFIG: "access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}"
 
     steps:
       - uses: actions/checkout@v4

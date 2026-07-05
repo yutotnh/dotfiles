@@ -8,21 +8,54 @@ if ! type curl &>/dev/null; then
     exit 1
 fi
 
-# yumやaptだと管理者権限が必要なので、Homebrewをインストールする
-# 参考: https://docs.brew.sh/Installation#unattended-installation
-NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+SCRIPT_DIRECTORY="$(dirname "$(realpath "${BASH_SOURCE:-0}")")"
 
-# Homebrew の PATH を通す
-#   Linux
-test -d ~/.linuxbrew && eval $(~/.linuxbrew/bin/brew shellenv)
-test -d /home/linuxbrew/.linuxbrew && eval $(/home/linuxbrew/.linuxbrew/bin/brew shellenv)
-#   macOS
-test -d /opt/homebrew/bin && eval $(/opt/homebrew/bin/brew shellenv)
+# nix.confをdotfiles内で管理する
+# rootで実行しているとき、bashの${HOME}(例: コンテナだと/github/home)と、
+# nixが設定ファイルの検索に使うホームディレクトリ(passwdの/root)がずれることがあるため、
+# ${HOME}を経由しないNIX_USER_CONF_FILESで直接ファイルを指定する
+export NIX_USER_CONF_FILES="${SCRIPT_DIRECTORY}/nix/nix.conf"
 
-brew bundle --no-lock
+# Nix の PATH を通す(既にインストール済みの場合、非ログインシェルでは~/.bashrcを経由しないため必要)
+#   single-user
+[[ -r "${HOME}/.nix-profile/etc/profile.d/nix.sh" ]] && source "${HOME}/.nix-profile/etc/profile.d/nix.sh"
+#   multi-user(daemon)
+[[ -r /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh ]] && source /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
 
-# To install useful key bindings and fuzzy completion:
-"$(brew --prefix)/opt/fzf/install" --all
+##
+# @brief Nix をインストールする
+# 参考: https://nixos.org/download/
+if ! type nix &>/dev/null; then
+    if [[ "$(uname)" == "Darwin" ]]; then
+        # macOSはAPFSの制約により、multi-user(daemon)インストールのみサポートされている
+        sh <(curl -L https://nixos.org/nix/install) --daemon --yes
+    else
+        # コンテナやWSLではsystemdが無い場合があり、daemonを起動できないことがある
+        # そのため、root権限だけで完結するsingle-userインストールを使う
+        # CIのコンテナ環境ではrootユーザーで実行しており、sudoコマンドが存在しないことがある
+        # single-userインストーラーはrootで実行していても/nixの作成にsudoを使おうとするため、
+        # 事前にrootのまま/nixを作成しておくことでsudoを不要にする
+        if [[ "$(id -u)" -eq 0 ]] && [[ ! -e /nix ]]; then
+            mkdir -m 0755 /nix
+            chown root /nix
+        fi
+        sh <(curl -L https://nixos.org/nix/install) --no-daemon --yes
+    fi
+
+    # Nix の PATH を通す
+    #   single-user
+    [[ -r "${HOME}/.nix-profile/etc/profile.d/nix.sh" ]] && source "${HOME}/.nix-profile/etc/profile.d/nix.sh"
+    #   multi-user(daemon)
+    [[ -r /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh ]] && source /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
+fi
+
+##
+# @brief flake.nix に記載しているコマンド一式をインストールする(既にインストール済みなら最新化する)
+if nix profile list 2>/dev/null | grep -qF "${SCRIPT_DIRECTORY}"; then
+    nix profile upgrade '.*'
+else
+    nix profile install "${SCRIPT_DIRECTORY}#default"
+fi
 
 ##
 # @brief Rust の環境をセットアップする
@@ -31,8 +64,6 @@ if type rustup-init &>/dev/null; then
 else
     echo "Can not setup Rust environment." >&2
 fi
-
-SCRIPT_DIRECTORY="$(dirname "$(realpath "${BASH_SOURCE:-0}")")"
 
 ##
 # @brief ~/.bashrcにbashrc.sh を読み込む処理を追加する

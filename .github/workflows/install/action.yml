@@ -9,10 +9,13 @@ runs:
       shell: bash
       run: |
         set -eu
+        # コンテナ環境ではroot向けの~/.bashrcが存在しない場合があるため、無ければ作成する
+        touch "${HOME}/.bashrc"
+
         ./install.sh
-        exec bash -l
-        # Homebrewと、Homebrewでインストールしたコマンド(の内1つ)が存在するか確認する
-        type brew
-        type bat
+
+        # Nixと、Nix profileでインストールしたコマンド(の内1つ)が存在するか確認する
+        bash -c 'source "${HOME}/.bashrc" && type nix'
+        bash -c 'source "${HOME}/.bashrc" && type bat'
         # エイリアスが設定できていることを確認する
-        alias cat
+        bash -c 'source "${HOME}/.bashrc" && alias cat'

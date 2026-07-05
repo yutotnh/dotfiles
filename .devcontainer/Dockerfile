@@ -1,10 +1,8 @@
 FROM mcr.microsoft.com/devcontainers/base:jammy
 
-# Install Homebrew requirements
-# https://docs.brew.sh/Homebrew-on-Linux#requirements
+# Install Nix requirements
+# https://nix.dev/manual/nix/stable/installation/installing-binary#linux
 RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
-    && apt-get -y install --no-install-recommends build-essential \
-                                                  procps \
-                                                  curl \
-                                                  file \
+    && apt-get -y install --no-install-recommends curl \
+                                                  xz-utils \
                                                   git
