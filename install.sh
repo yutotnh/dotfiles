@@ -10,6 +10,15 @@ fi
 
 SCRIPT_DIRECTORY="$(dirname "$(realpath "${BASH_SOURCE:-0}")")"
 
+# rootで実行しているとき、bashの${HOME}(例: コンテナだと/github/home)と、
+# nixがnix.confの検索に使うホームディレクトリ(passwdの/root)がずれることがあるため、
+# rootのときはユーザーごとの設定ではなく、システム全体の設定ファイルを使う
+if [[ "$(id -u)" -eq 0 ]]; then
+    NIX_CONF_FILE=/etc/nix/nix.conf
+else
+    NIX_CONF_FILE="${HOME}/.config/nix/nix.conf"
+fi
+
 # Nix の PATH を通す(既にインストール済みの場合、非ログインシェルでは~/.bashrcを経由しないため必要)
 #   single-user
 [[ -r "${HOME}/.nix-profile/etc/profile.d/nix.sh" ]] && source "${HOME}/.nix-profile/etc/profile.d/nix.sh"
@@ -38,9 +47,9 @@ if ! type nix &>/dev/null; then
                 mkdir -m 0755 /nix
                 chown root /nix
             fi
-            mkdir -p /etc/nix
-            if ! grep -qF "build-users-group" /etc/nix/nix.conf 2>/dev/null; then
-                echo "build-users-group =" >>/etc/nix/nix.conf
+            mkdir -p "$(dirname "${NIX_CONF_FILE}")"
+            if ! grep -qF "build-users-group" "${NIX_CONF_FILE}" 2>/dev/null; then
+                echo "build-users-group =" >>"${NIX_CONF_FILE}"
             fi
         fi
         sh <(curl -L https://nixos.org/nix/install) --no-daemon --yes
@@ -55,10 +64,9 @@ fi
 
 ##
 # @brief flakes を有効化する
-NIX_CONFIG_DIRECTORY="${HOME}/.config/nix"
-mkdir -p "${NIX_CONFIG_DIRECTORY}"
-if ! grep -qF "experimental-features = nix-command flakes" "${NIX_CONFIG_DIRECTORY}/nix.conf" 2>/dev/null; then
-    echo "experimental-features = nix-command flakes" >>"${NIX_CONFIG_DIRECTORY}/nix.conf"
+mkdir -p "$(dirname "${NIX_CONF_FILE}")"
+if ! grep -qF "experimental-features = nix-command flakes" "${NIX_CONF_FILE}" 2>/dev/null; then
+    echo "experimental-features = nix-command flakes" >>"${NIX_CONF_FILE}"
 fi
 
 ##
