@@ -33,6 +33,8 @@
               gh
               git
               gitui
+              glow
+              herdr
               icdiff
               jq
               less
