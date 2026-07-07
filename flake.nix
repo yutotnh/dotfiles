@@ -42,6 +42,7 @@
               rustup
               sourceHighlight
               starship
+              tmux
               vim
               zoxide
             ]
