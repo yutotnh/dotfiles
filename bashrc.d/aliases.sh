@@ -36,6 +36,7 @@ alias mv='mv -i'
 alias nkf='nkf -x'
 alias sl='ls'
 alias ssh='ssh -XC'
+alias tmux='tmux -f "${DOTFILES_DIRECTORY}/tmux/tmux.conf"'
 alias view='vim -RM'
 
 if [ "${OSTYPE}" == "linux-gnu" ]; then
