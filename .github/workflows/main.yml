@@ -19,7 +19,7 @@ jobs:
       NIX_CONFIG: "access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}"
 
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
 
       - name: Set up
         run: |
@@ -45,7 +45,7 @@ jobs:
       NIX_CONFIG: "access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}"
 
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
 
       - name: Install
         uses: ./.github/workflows/install
