@@ -33,6 +33,7 @@
               gh
               git
               gitui
+              glow
               icdiff
               jq
               less
@@ -48,6 +49,7 @@
             ]
             ++ lib.optionals stdenv.isLinux [
               glibcLocales
+              herdr
               xclip
             ];
           extraOutputsToInstall = [
