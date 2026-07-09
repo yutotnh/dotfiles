@@ -175,12 +175,13 @@ endfor
 unlet s:i
 
 " VS CodeのようにCtrl+Alt+←/→でペインを移動する
-" 移動先にウィンドウがあれば移動するだけ、無ければ縦分割で新規作成してそちらへ移動する
+" 隣にウィンドウがあればフォーカスを移動するだけ、無ければ現在のウィンドウ自体を
+" 画面の端(左端/右端)へ移動させる(バッファを複製するのではなく、ウィンドウそのものを動かす)
 function! s:MoveOrCreateWindow(direction) abort
     let l:winnr_before = winnr()
     execute 'wincmd ' . a:direction
     if winnr() == l:winnr_before
-        execute a:direction ==# 'l' ? 'rightbelow vsplit' : 'leftabove vsplit'
+        execute a:direction ==# 'l' ? 'wincmd L' : 'wincmd H'
     endif
 endfunction
 
