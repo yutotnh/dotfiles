@@ -13,7 +13,7 @@ export NIX_USER_CONF_FILES="${SCRIPT_DIRECTORY}/nix/nix.conf"
 
 if type nix &>/dev/null; then
     if nix profile list 2>/dev/null | grep -qF "${SCRIPT_DIRECTORY}"; then
-        nix profile remove "${SCRIPT_DIRECTORY}#default" || true
+        nix profile remove "${SCRIPT_DIRECTORY}/nix#default" || true
     fi
 fi
 

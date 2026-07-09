@@ -50,11 +50,11 @@ if ! type nix &>/dev/null; then
 fi
 
 ##
-# @brief flake.nix に記載しているコマンド一式をインストールする(既にインストール済みなら最新化する)
+# @brief nix/flake.nix に記載しているコマンド一式をインストールする(既にインストール済みなら最新化する)
 if nix profile list 2>/dev/null | grep -qF "${SCRIPT_DIRECTORY}"; then
     nix profile upgrade '.*'
 else
-    nix profile install "${SCRIPT_DIRECTORY}#default"
+    nix profile install "${SCRIPT_DIRECTORY}/nix#default"
 fi
 
 ##
