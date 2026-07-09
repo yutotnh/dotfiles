@@ -5,7 +5,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Commands
 
 ```bash
-./install.sh    # Nixのインストール、flake.nixのパッケージ導入、~/.bashrcへのフック追加。既に導入済みなら更新として動く(冪等)
+./install.sh    # Nixのインストール、nix/flake.nixのパッケージ導入、~/.bashrcへのフック追加。既に導入済みなら更新として動く(冪等)
 ./uninstall.sh  # Nix・導入したパッケージ・~/.bashrcのフックを削除する
 ```
 
@@ -28,14 +28,14 @@ npx cspell .
 
 ## Architecture
 
-### パッケージ管理: flake.nix + `nix profile`
+### パッケージ管理: nix/flake.nix + `nix profile`
 
-`flake.nix` の `packages.<system>.default` に全ツールを1つの `buildEnv` として宣言している。
+`nix/flake.nix` の `packages.<system>.default` に全ツールを1つの `buildEnv` として宣言している。
 `install.sh` は `nix profile install`(初回)/`nix profile upgrade '.*'`(2回目以降、
 `nix profile list` に自分の flake パス文字列が含まれるかで判定)を使い分けて反映する。
-ツールの追加・削除は `flake.nix` の `paths` を編集するだけでよい。
+ツールの追加・削除は `nix/flake.nix` の `paths` を編集するだけでよい。
 
-Nix自体の設定(`nix.conf`)も `~/.config/nix/nix.conf` ではなく `nix/nix.conf` としてdotfiles内で
+Nix自体の設定(`nix.conf`)も `flake.nix`/`flake.lock` と同じく `nix/nix.conf` としてdotfiles内で
 管理し、`NIX_USER_CONF_FILES` 環境変数(`GIT_CONFIG_GLOBAL`や`MYVIMRC`と同じ発想)で参照させている。
 `install.sh`・`uninstall.sh`・`bashrc.sh` それぞれが個別に `NIX_USER_CONF_FILES` を export する
 必要がある(スクリプトをまたいで永続する状態ではないため)。
