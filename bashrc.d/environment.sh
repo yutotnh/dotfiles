@@ -6,7 +6,7 @@ if type starship &>/dev/null; then
     # `eval "$(starship init bash)"` を実行すると環境変数STARSHIP_CMD_STATUSが定義されるので、それの有無から実行の可否を決める
     if [ ! -v STARSHIP_CMD_STATUS ]; then
         eval "$(starship init bash)"
-        export STARSHIP_CONFIG="${DOTFILES_DIRECTORY}/starship.toml"
+        export STARSHIP_CONFIG="${DOTFILES_DIRECTORY}/starship/starship.toml"
     fi
 else
     # starshipがインストールされていないときは、プロンプトをある程度カスタマイズする
