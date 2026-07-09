@@ -123,6 +123,33 @@ set hlsearch
 nmap <Esc><Esc> :nohlsearch<CR><Esc>
 
 """""""""""""""""""
+" Terminal
+"""""""""""""""""""
+" VS CodeのようにCtrl+Jで統合ターミナルを開閉する
+if has('terminal') || has('nvim')
+    function! s:ToggleTerminal() abort
+        let l:term_buf = -1
+        for l:buf in range(1, bufnr('$'))
+            if bufexists(l:buf) && getbufvar(l:buf, '&buftype') ==# 'terminal'
+                let l:term_buf = l:buf
+                break
+            endif
+        endfor
+
+        if l:term_buf != -1 && bufwinnr(l:term_buf) != -1
+            execute bufwinnr(l:term_buf) . 'close'
+        elseif l:term_buf != -1
+            execute 'botright split | buffer ' . l:term_buf
+        else
+            botright terminal
+        endif
+    endfunction
+
+    nnoremap <silent> <C-j> :call <SID>ToggleTerminal()<CR>
+    tnoremap <silent> <C-j> <C-\><C-n>:call <SID>ToggleTerminal()<CR>
+endif
+
+"""""""""""""""""""
 " Plugin
 """""""""""""""""""
 " Automatic install of vim-plug
