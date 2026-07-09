@@ -47,9 +47,11 @@ elif [[ "${OSTYPE}" == *"darwin"* ]]; then
 fi
 
 # WSL で実行中に Windows のコマンドを実行するための alias
+# clip.exe は WSLのホスト自体のクリップボードにコピーするため、SSH等で別マシンから
+# 接続している場合は接続元に届かない。そのため clip はOSC 52ベースの関数(functions.sh)に
+# 統一し、ここではエイリアスとして登録しない
 if uname -r | grep -qi microsoft; then
     builtin alias explorer='/mnt/c/Windows/explorer.exe'
-    builtin alias clip='/mnt/c/Windows/System32/clip.exe'
     builtin alias code='/mnt/c/Users/*/AppData/Local/Programs/Microsoft\ VS\ Code/bin/code'
 fi
 
