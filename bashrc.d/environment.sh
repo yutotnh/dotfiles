@@ -163,7 +163,7 @@ if type fzf &>/dev/null; then
 fi
 
 if type vim &>/dev/null; then
-    export MYVIMRC="${DOTFILES_DIRECTORY}/.vimrc"
+    export MYVIMRC="${DOTFILES_DIRECTORY}/vim/vimrc"
     export VIMINIT="source ${MYVIMRC}"
 fi
 
