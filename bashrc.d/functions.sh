@@ -56,6 +56,35 @@ function cd-foolish() {
 }
 
 #
+# @brief OSC 52 escape sequenceを使って標準入力をクリップボードにコピーする
+#
+# ローカルにクリップボード操作コマンド(xclip/wl-copy/pbcopy等)が無い環境や、
+# SSHで接続している場合(WSLの`clip.exe`のようにサーバー側のクリップボードにコピーする
+# 手段では、接続元のクリップボードに届かない)でも、OSC 52に対応した端末であれば
+# 接続元のクリップボードにコピーできる
+#
+# 例:
+# $ echo -n "hello" | clip
+function clip() {
+    if ! type base64 &>/dev/null; then
+        echo "clip: base64 command not found" >&2
+        return 1
+    fi
+
+    local data
+    data=$(base64 | tr -d '\n')
+
+    if [ -n "${TMUX:-}" ]; then
+        # tmux配下だとOSC 52がtmux自身に消費されてしまうため、DCSでパススルーする
+        # 参考: https://github.com/tmux/tmux/wiki/Clipboard
+        # shellcheck disable=SC1003 # 末尾の\\は printf に渡すエスケープシーケンス(ST)の一部であり、シングルクォートのエスケープではない
+        printf '\033Ptmux;\033\033]52;c;%s\a\033\\' "${data}" >/dev/tty
+    else
+        printf '\033]52;c;%s\a' "${data}" >/dev/tty
+    fi
+}
+
+#
 # @brief カレントディレクトリ以下の今日以前で最も今日に近いISO 8601の日付形式のディレクトリ名を返す
 #
 # 例1: 今日の日付のディレクトリがない場合
