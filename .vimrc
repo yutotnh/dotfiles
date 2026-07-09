@@ -154,6 +154,7 @@ if exists('$DOTFILES_DIRECTORY')
         Plug 'preservim/nerdtree'
         Plug 'tyru/caw.vim'
         Plug 'nathanaelkane/vim-indent-guides'
+        Plug 'ojroques/vim-oscyank', {'branch': 'main'}
     call plug#end()
 
     let g:lsp_settings_servers_dir = $DOTFILES_DIRECTORY . '/.vim/vim-lsp-settings/servers'
@@ -181,4 +182,8 @@ if exists('$DOTFILES_DIRECTORY')
     " Ctrl+/でコメント切り替え
     nmap <C-_> <Plug>(caw:i:toggle)
     vmap <C-_> <Plug>(caw:i:toggle)
+
+    " ヤンクした内容をOSC52経由でクリップボードにコピーする
+    " SSH接続先など、xclip/xselが使えない環境でもクリップボード共有できる
+    autocmd TextYankPost * if v:event.operator is 'y' && v:event.regname is '' | execute 'OSCYankRegister "' | endif
 endif
