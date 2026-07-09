@@ -174,29 +174,29 @@ for s:i in range(1, 9)
 endfor
 unlet s:i
 
-" VS CodeのようにCtrl+Alt+←/→でペインを移動する
-" 隣にウィンドウがあればフォーカスを移動するだけ。無い場合、他にもウィンドウが
-" 存在するなら現在のウィンドウ自体を画面の端(左端/右端)へ移動させ(バッファを
-" 複製するのではなく、ウィンドウそのものを動かす)、ウィンドウがこれ1つしか
-" 無いなら移動先が存在しないので新規に分割して作成する
-function! s:MoveOrCreateWindow(direction) abort
-    let l:winnr_before = winnr()
+" VS CodeのようにCtrl+Alt+←/→で「今のエディタ(バッファ)」を隣のグループへ移動する
+" (workbench.action.moveEditorToPreviousGroup/NextGroup 相当)。ペインそのものを
+" 動かすのではなく、現在のバッファを隣のウィンドウへ表示させ、元のウィンドウは
+" 閉じる(VS Codeで移動元グループが空になると閉じるのと同じ挙動)。隣にウィンドウが
+" 無い場合(端、または単一ウィンドウ)は移動先グループが存在しないため何もしない
+function! s:MoveActiveBufferToGroup(direction) abort
+    let l:curbuf = bufnr('%')
+    let l:srcwin = win_getid()
+
     execute 'wincmd ' . a:direction
-    if winnr() != l:winnr_before
+    if win_getid() ==# l:srcwin
         return
     endif
 
-    if winnr('$') > 1
-        execute a:direction ==# 'l' ? 'wincmd L' : 'wincmd H'
-    else
-        execute a:direction ==# 'l' ? 'rightbelow vsplit' : 'leftabove vsplit'
-    endif
+    execute 'buffer ' . l:curbuf
+    call win_gotoid(l:srcwin)
+    close
 endfunction
 
-nnoremap <silent> <C-A-Left> :call <SID>MoveOrCreateWindow('h')<CR>
-nnoremap <silent> <C-A-Right> :call <SID>MoveOrCreateWindow('l')<CR>
-tnoremap <silent> <C-A-Left> <C-\><C-n>:call <SID>MoveOrCreateWindow('h')<CR>
-tnoremap <silent> <C-A-Right> <C-\><C-n>:call <SID>MoveOrCreateWindow('l')<CR>
+nnoremap <silent> <C-A-Left> :call <SID>MoveActiveBufferToGroup('h')<CR>
+nnoremap <silent> <C-A-Right> :call <SID>MoveActiveBufferToGroup('l')<CR>
+tnoremap <silent> <C-A-Left> <C-\><C-n>:call <SID>MoveActiveBufferToGroup('h')<CR>
+tnoremap <silent> <C-A-Right> <C-\><C-n>:call <SID>MoveActiveBufferToGroup('l')<CR>
 
 """""""""""""""""""
 " Plugin
