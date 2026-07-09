@@ -220,6 +220,12 @@ if exists('$DOTFILES_DIRECTORY')
     " dotfilesを表示する
     let NERDTreeShowHidden=1
 
+    " NERDTreeはデフォルトでCtrl+J/Ctrl+Kに「次/前の兄弟ノードへ移動」を
+    " バッファローカルに割り当てており、これがCtrl+J(ターミナルトグル)より
+    " 優先されて効かなくなるため、NERDTree側のマッピングを無効化する
+    let g:NERDTreeMapJumpNextSibling = ''
+    let g:NERDTreeMapJumpPrevSibling = ''
+
     " vim-gitgutterの設定
     " デフォルトでは4000msに設定されているが、それだとだいぶ遅いので短めに変更する
     " リポジトリのREADMEによると、100ms程度に減らすのがおすすめとのこと
