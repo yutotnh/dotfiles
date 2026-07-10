@@ -177,6 +177,13 @@ if type git &>/dev/null; then
     export GIT_CONFIG_GLOBAL="${DOTFILES_DIRECTORY}/git/.gitconfig"
 fi
 
+if type glow &>/dev/null; then
+    # glow は GLOW_CONFIG_HOME 直下(サブディレクトリ無し)の glow.yml を設定ファイルとして参照する
+    # (XDG_CONFIG_HOME と違い glow サブディレクトリは付かない)
+    # ページャー表示(pager: true)などの設定を dotfiles 内で管理するために参照させている
+    export GLOW_CONFIG_HOME="${DOTFILES_DIRECTORY}/glow"
+fi
+
 if type gpg &>/dev/null; then
     GPG_TTY=$(tty)
     export GPG_TTY
