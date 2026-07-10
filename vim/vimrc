@@ -174,23 +174,62 @@ for s:i in range(1, 9)
 endfor
 unlet s:i
 
+" 現在バッファ以外の、リスト表示対象(buflisted)なバッファを1つ選ぶ。
+" まずalternateバッファ(#)を優先し、条件を満たさなければ最初に見つかった
+" listedバッファを使う。見つからなければ-1を返す
+function! s:PickOtherListedBuffer(curbuf) abort
+    let l:altbuf = bufnr('#')
+    if l:altbuf !=# a:curbuf && l:altbuf > 0 && buflisted(l:altbuf)
+        return l:altbuf
+    endif
+
+    for l:info in getbufinfo({'buflisted': 1})
+        if l:info.bufnr !=# a:curbuf
+            return l:info.bufnr
+        endif
+    endfor
+
+    return -1
+endfunction
+
 " VS CodeのようにCtrl+Alt+←/→で「今のエディタ(バッファ)」を隣のグループへ移動する
 " (workbench.action.moveEditorToPreviousGroup/NextGroup 相当)。ペインそのものを
 " 動かすのではなく、現在のバッファを隣のウィンドウへ表示させ、元のウィンドウは
-" 閉じる(VS Codeで移動元グループが空になると閉じるのと同じ挙動)。隣にウィンドウが
-" 無い場合(端、または単一ウィンドウ)は移動先グループが存在しないため何もしない
+" 閉じる(VS Codeで移動元グループが空になると閉じるのと同じ挙動)。
+" 隣にウィンドウが無い場合(端、または単一ウィンドウ)は、
+" 単一ウィンドウかつlistedなバッファが2つ以上あるときに限り、VS Codeが
+" 移動元グループにエディタが2つ以上あると新グループを作るのと同様に、その方向へ
+" 新しい分割を作って現在バッファを移動先へ、元のウィンドウには別のバッファを表示する。
+" それ以外(バッファが1つだけ、または複数ウィンドウレイアウトの端)は
+" 移動先グループが存在しないため何もしない(1バッファのみでの分割はバッファの
+" 複製になり、避けたい挙動のため)
 function! s:MoveActiveBufferToGroup(direction) abort
     let l:curbuf = bufnr('%')
     let l:srcwin = win_getid()
 
     execute 'wincmd ' . a:direction
-    if win_getid() ==# l:srcwin
+    if win_getid() !=# l:srcwin
+        execute 'buffer ' . l:curbuf
+        call win_gotoid(l:srcwin)
+        close
         return
     endif
 
+    if winnr('$') !=# 1
+        return
+    endif
+
+    let l:otherbuf = s:PickOtherListedBuffer(l:curbuf)
+    if l:otherbuf ==# -1
+        return
+    endif
+
+    execute a:direction ==# 'l' ? 'rightbelow vsplit' : 'leftabove vsplit'
+    let l:newwin = win_getid()
     execute 'buffer ' . l:curbuf
     call win_gotoid(l:srcwin)
-    close
+    execute 'buffer ' . l:otherbuf
+    call win_gotoid(l:newwin)
 endfunction
 
 nnoremap <silent> <C-A-Left> :call <SID>MoveActiveBufferToGroup('h')<CR>
