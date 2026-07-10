@@ -1,0 +1,13 @@
+# glow の設定ファイル
+# GLOW_CONFIG_HOME 環境変数(bashrc.d/environment.sh で設定)経由で参照させている
+
+# style name or JSON path (default "auto")
+style: "auto"
+# mouse support (TUI-mode only)
+mouse: false
+# use pager to display markdown
+pager: true
+# word-wrap at width
+width: 80
+# show all files, including hidden and ignored.
+all: false
