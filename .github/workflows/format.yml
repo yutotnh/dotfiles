@@ -5,10 +5,6 @@ on:
   pull_request:
   workflow_dispatch:
 
-concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
-
 # デフォルトを最小権限にし、権限が必要なジョブでのみ個別に上書きする
 permissions:
   contents: read
