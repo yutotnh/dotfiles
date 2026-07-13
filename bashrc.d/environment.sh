@@ -15,10 +15,21 @@ else
     # "\001"と"\002をつけることで、エスケープシーケンスの部分は文字数に数えられなくなる(っぽい)
     # PS1で直接変数を利用する場合は"\001"は"\["に、"\002"は"\]"に置き換え可能だが、
     # これらは関数内部で使うと動作しないため、"\001"と"\002"を使っている
-    _reset="\001$(tput sgr0)\002"
-    _red="\001$(tput setaf 1)\002"
-    _green="\001$(tput setaf 2)\002"
-    _blue="\001$(tput setaf 4)\002"
+    # TERMが未設定(例: CIコンテナのrunステップ)やdumbのときにtputを呼ぶと、
+    # `tput: No value for $TERM and no -T specified`のようなエラーが標準エラーに出る。
+    # bashrc.shは「ツール未導入でもエラーを出さずに最後まで読み込まれる」ことを制約としているため、
+    # 色付けが可能な端末のときだけtputで色を取得し、それ以外は色無しにフォールバックする。
+    if [[ -n "${TERM:-}" && "${TERM}" != "dumb" ]]; then
+        _reset="\001$(tput sgr0)\002"
+        _red="\001$(tput setaf 1)\002"
+        _green="\001$(tput setaf 2)\002"
+        _blue="\001$(tput setaf 4)\002"
+    else
+        _reset=""
+        _red=""
+        _green=""
+        _blue=""
+    fi
 
     function _color_by_exit_code() {
         local exit_code="${?}"
