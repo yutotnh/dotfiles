@@ -5,9 +5,20 @@ on:
   pull_request:
   workflow_dispatch:
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+# デフォルトを最小権限にし、権限が必要なジョブでのみ個別に上書きする
+permissions:
+  contents: read
+
 jobs:
   spell:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
     steps:
       - name: Checkout
         uses: actions/checkout@v7
@@ -28,6 +39,8 @@ jobs:
 
   file-name:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
       - name: Checkout
         uses: actions/checkout@v7

@@ -7,6 +7,13 @@ on:
   schedule:
     - cron: "0 9 * * 5"
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
 jobs:
   install-linux:
     runs-on: ubuntu-latest
