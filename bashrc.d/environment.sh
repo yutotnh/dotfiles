@@ -174,7 +174,7 @@ if type zoxide &>/dev/null; then
 fi
 
 if type git &>/dev/null; then
-    export GIT_CONFIG_GLOBAL="${DOTFILES_DIRECTORY}/git/.gitconfig"
+    export GIT_CONFIG_GLOBAL="${DOTFILES_DIRECTORY}/git/gitconfig"
 fi
 
 if type glow &>/dev/null; then

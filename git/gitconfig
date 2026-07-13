@@ -40,4 +40,4 @@
 [include]
 	# リポジトリごとに設定を変えたい場合がある
 	# そのためリポジトリごとに設定ファイルを作成し、includeで読み込む
-	path = .gitconfig.local
+	path = gitconfig.local
