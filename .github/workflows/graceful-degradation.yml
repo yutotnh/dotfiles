@@ -15,6 +15,12 @@ jobs:
     strategy:
       matrix:
         container: ["rockylinux:9", "ubuntu:latest"]
+    # ubuntu:latestの/bin/shはdashであり、bash専用の`&>`リダイレクトが
+    # 意図通りに解釈されない(バックグラウンド実行+無関係なリダイレクトとして
+    # 誤解釈され、ifの条件が常にtrueになる)ため、bashを明示的に使う
+    defaults:
+      run:
+        shell: bash
 
     steps:
       - name: Set up
@@ -47,12 +53,12 @@ jobs:
 
       - name: bat が未導入のときは cat の alias が登録されないことを確認する(graceful-degradationの実効性確認)
         run: |
-          if type bat &>/dev/null; then
+          if type bat >/dev/null 2>&1; then
             echo "このジョブは bat が未導入であることを前提としています"
             exit 1
           fi
 
-          if bash -c 'source ./bashrc.sh; alias cat' &>/dev/null; then
+          if bash -c 'source ./bashrc.sh; alias cat' >/dev/null 2>&1; then
             echo "bat が未導入にもかかわらず cat の alias が登録されています"
             exit 1
           fi
