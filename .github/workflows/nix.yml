@@ -5,11 +5,6 @@ on:
   pull_request:
   workflow_dispatch:
 
-# 同じブランチ/PRで新しい実行が始まったら、古い実行はキャンセルする
-concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
-
 permissions:
   contents: read
 
