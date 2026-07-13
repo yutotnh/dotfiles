@@ -1,0 +1,29 @@
+name: Nix
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  flake-check:
+    runs-on: ubuntu-latest
+    # 未認証のままだとflake.nixのnixpkgs取得時にGitHub APIのレート制限に引っかかることがあるため、認証する
+    env:
+      NIX_CONFIG: "access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}"
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Install Nix
+        uses: DeterminateSystems/nix-installer-action@v22
+
+      - name: nix flake check
+        run: nix flake check ./nix
+
+      - name: nixfmt --check
+        run: nix run nixpkgs#nixfmt -- --check nix/flake.nix
