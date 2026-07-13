@@ -1,0 +1,64 @@
+name: Graceful degradation
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  bashrc-without-nix:
+    runs-on: ubuntu-latest
+    container: ${{ matrix.container }}
+    strategy:
+      matrix:
+        container: ["rockylinux:9", "ubuntu:latest"]
+    # ubuntu:latestの/bin/shはdashであり、bash専用の`&>`リダイレクトが
+    # 意図通りに解釈されない(バックグラウンド実行+無関係なリダイレクトとして
+    # 誤解釈され、ifの条件が常にtrueになる)ため、bashを明示的に使う
+    defaults:
+      run:
+        shell: bash
+
+    steps:
+      - name: Set up
+        run: |
+          if [ "${{ matrix.container }}" = "rockylinux:9" ]; then
+            dnf install -y --allowerasing bash git
+          elif [ "${{ matrix.container }}" = "ubuntu:latest" ]; then
+            apt-get update && apt-get install -y bash git
+          fi
+
+      - uses: actions/checkout@v7
+
+      - name: bashrc.sh が Nix・ツール未導入でもエラーなく最後まで読み込まれることを確認する
+        run: |
+          set +e
+          stderr=$(bash -c 'source ./bashrc.sh' 2>&1 >/dev/null)
+          status=$?
+          set -e
+
+          if [ -n "${stderr}" ]; then
+            echo "bashrc.sh の source 中に標準エラー出力がありました:"
+            echo "${stderr}"
+            exit 1
+          fi
+
+          if [ "${status}" -ne 0 ]; then
+            echo "bashrc.sh の source が exit code ${status} で終了しました"
+            exit 1
+          fi
+
+      - name: bat が未導入のときは cat の alias が登録されないことを確認する(graceful-degradationの実効性確認)
+        run: |
+          if type bat >/dev/null 2>&1; then
+            echo "このジョブは bat が未導入であることを前提としています"
+            exit 1
+          fi
+
+          if bash -c 'source ./bashrc.sh; alias cat' >/dev/null 2>&1; then
+            echo "bat が未導入にもかかわらず cat の alias が登録されています"
+            exit 1
+          fi
