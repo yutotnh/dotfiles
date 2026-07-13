@@ -1,0 +1,42 @@
+name: Update flake.lock
+
+# DependabotはNix flakeに対応していないため、nix/flake.lock(nixpkgs-unstableを固定)が
+# 手動更新しない限り古くなってしまう。それを防ぐため、定期的にflake.lockを更新して
+# Pull requestを作成する。
+#
+# 注意: このPull requestはデフォルトのGITHUB_TOKENで作成されるため、GitHub Actionsの仕様上
+# main.ymlなどの他のワークフローは自動実行されない(Personal Access Tokenを使えば回避できるが、
+# 本リポジトリでは秘密情報を増やしたくないためGITHUB_TOKENのままとする)。
+# 必要であればPull requestを一度closeして再度openすることで、他のワークフローを実行できる。
+
+on:
+  schedule:
+    - cron: "0 0 * * 1"
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  update-flake-lock:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Install Nix
+        uses: DeterminateSystems/nix-installer-action@v22
+
+      - name: Update flake.lock
+        uses: DeterminateSystems/update-flake-lock@v28
+        with:
+          # flake.nixはリポジトリ直下ではなくnix/配下にあるため指定する
+          path-to-flake-dir: nix
+          pr-title: "chore: nix/flake.lockを更新"
+          pr-labels: |
+            dependencies
