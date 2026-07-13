@@ -38,6 +38,7 @@
               jq
               less
               lv
+              msedit
               nkf
               ripgrep
               rustup
