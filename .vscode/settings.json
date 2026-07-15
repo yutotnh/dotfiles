@@ -11,7 +11,7 @@
     "editor.formatOnType": false
   },
   "[properties]": {
-    // 今のところpropertiesファイルは.gitconfigのみで、.gitconfigにはフォーマッターがないので無効にしておく
+    // 今のところpropertiesファイルはgit/gitconfigのみで、gitconfigにはフォーマッターがないので無効にしておく
     "editor.formatOnSave": false
   },
   "editor.formatOnSave": true,
