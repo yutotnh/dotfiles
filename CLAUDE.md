@@ -18,6 +18,11 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 コミットする前には必ず `npx cspell .` を実行し、指摘があれば解消してからコミットすること。
 cspellのチェックにはよく引っかかるため。
 
+PRを作成したら、内容に応じて既存ラベル(`bug`/`enhancement`/`documentation` など、
+`gh label list` で確認できるもの)を必ず付与すること。過去の慣例では `fix:` 系は `bug`、
+`feat:`/`add:`/`update:`/`refactor:`/`chore:`/`ci:` 系は `enhancement`、ドキュメントのみの
+変更は `documentation` を付けている。
+
 Lint(GitHub ActionsのFormat/Spellワークフローと同じもの):
 
 ```bash
