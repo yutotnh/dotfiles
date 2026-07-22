@@ -36,9 +36,14 @@ npx cspell .
 ### パッケージ管理: nix/flake.nix + `nix profile`
 
 `nix/flake.nix` の `packages.<system>.default` に全ツールを1つの `buildEnv` として宣言している。
-`install.sh` は `nix profile install`(初回)/`nix profile upgrade '.*'`(2回目以降、
-`nix profile list` に自分の flake パス文字列が含まれるかで判定)を使い分けて反映する。
+`install.sh` は `nix profile install`(初回)/`nix profile upgrade`(2回目以降)を使い分けて反映する。
 ツールの追加・削除は `nix/flake.nix` の `paths` を編集するだけでよい。
+
+Nix 2.34 では `nix profile` の各サブコマンドの位置引数が正規表現ではなく**要素名**として解釈される
+(全要素を対象にするには `--all`、正規表現を使うには `--regex`)。そのため `install.sh`・`uninstall.sh`
+はどちらも `nix profile list` の出力から自分が入れた要素の名前を取り出して渡している。
+`nix profile list` はパイプに繋いでも色を付けるため、ANSIエスケープを除去してから解析する必要がある。
+`--all` は利用者が自分で入れた無関係なパッケージまで更新してしまうため使わない。
 
 Nix自体の設定(`nix.conf`)も `flake.nix`/`flake.lock` と同じく `nix/nix.conf` としてdotfiles内で
 管理し、`NIX_USER_CONF_FILES` 環境変数(`GIT_CONFIG_GLOBAL`や`MYVIMRC`と同じ発想)で参照させている。
