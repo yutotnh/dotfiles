@@ -59,8 +59,16 @@ fi
 
 ##
 # @brief Rust の環境をセットアップする
-if type rustup-init &>/dev/null; then
-    rustup-init -y
+# nixpkgsのrustupパッケージはrustup-initを提供せず、rustupとそのshim(cargo, rustcなど)のみを
+# 提供するため、rustup-initではなくrustup自体でデフォルトツールチェインを導入する
+# shimはツールチェインが入っていないと動かないため、この処理が必要になる
+if type rustup &>/dev/null; then
+    # デフォルトツールチェインが未設定のときだけ導入する
+    # 設定済みなら `rustup default` はネットワークアクセス無しに即座に終わるため、
+    # install.sh を再実行したときの待ち時間が増えない
+    if ! rustup default &>/dev/null; then
+        rustup default stable
+    fi
 else
     echo "Can not setup Rust environment." >&2
 fi
