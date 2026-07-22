@@ -19,6 +19,16 @@ ${DOTFILES_DIRECTORY}/install.sh
 exec bash -l
 ```
 
+### `nix/flake.nix` の変更を反映する
+
+`install.sh` は2回目以降の実行では `nix/flake.nix` を読み直して `nix profile` を更新する。
+そのため、ツールを追加・削除するために `nix/flake.nix` を編集したときも、
+`git pull` は不要で `install.sh` を実行するだけでよい。
+
+編集内容はコミット前でも反映される(このとき `warning: Git tree ... is dirty` が出る)。
+ただし、NixはGitの追跡対象になっているファイルしか読まないため、
+**新しく追加したファイルは `git add` しないと反映されない**
+
 ## Uninstall
 
 ```bash
