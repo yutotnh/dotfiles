@@ -12,8 +12,19 @@ export NIX_USER_CONF_FILES="${SCRIPT_DIRECTORY}/nix/nix.conf"
 [[ -r /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh ]] && source /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
 
 if type nix &>/dev/null; then
-    if nix profile list 2>/dev/null | grep -qF "${SCRIPT_DIRECTORY}"; then
-        nix profile remove "${SCRIPT_DIRECTORY}/nix#default" || true
+    # Nix 2.34 では nix profile remove の位置引数が flake URL ではなく「要素名」として
+    # 解釈されるようになったため、要素名を nix profile list から取り出して渡す
+    # nix profile list はパイプに繋いでも色を付けるため、ANSIエスケープを除去してから解析する
+    DOTFILES_PROFILE_ELEMENTS="$(nix profile list 2>/dev/null | awk -v dir="${SCRIPT_DIRECTORY}" '
+        { gsub(/\033\[[0-9;]*m/, "") }
+        /^Name:/ { name = $2 }
+        /^Original flake URL:/ && index($0, dir) { print name }
+    ')"
+
+    if [[ -n "${DOTFILES_PROFILE_ELEMENTS}" ]]; then
+        # 要素名は空白を含まないため、意図的に単語分割させて複数要素を渡す
+        # shellcheck disable=SC2086
+        nix profile remove ${DOTFILES_PROFILE_ELEMENTS} || true
     fi
 fi
 
