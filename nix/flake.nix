@@ -51,6 +51,7 @@
             ++ lib.optionals stdenv.isLinux [
               glibcLocales
               herdr
+              luit
               xclip
             ];
           extraOutputsToInstall = [

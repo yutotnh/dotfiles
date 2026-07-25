@@ -85,6 +85,67 @@ function clip() {
 }
 
 #
+# @brief EUC-JPのテキストをUTF-8に変換して標準出力に出力する
+#
+# VS Codeの統合ターミナル(xterm.js)はUTF-8デコード固定で、端末側のエンコーディングを
+# 変更する設定が存在しない。そのためEUC-JPのファイルをそのまま`cat`すると文字化けする
+#
+# 変換にnkfではなくiconvを使うのは、`nkf -w`が半角カナを勝手に全角化してしまい
+# (`ﾃﾞｰﾀ`が`データ`になる)、元のテキストに忠実な変換にならないため
+#
+# @param $@ EUC-JPのファイル(省略した場合は標準入力を変換する)
+#
+# 例:
+# $ euc-cat euc.txt
+# $ cat euc.txt | euc-cat
+function euc-cat() {
+    if ! type iconv &>/dev/null; then
+        echo "euc-cat: iconv command not found" >&2
+        return 1
+    fi
+
+    # 引数が無い場合は標準入力をそのままiconvに処理させる
+    if [ $# -eq 0 ]; then
+        iconv -f EUC-JP -t UTF-8
+        return
+    fi
+
+    local file
+    for file in "$@"; do
+        # `-`始まりのファイル名をオプションと解釈させないため`--`で区切る
+        iconv -f EUC-JP -t UTF-8 -- "${file}" || return
+    done
+}
+
+#
+# @brief EUC-JPで入出力する対話型アプリをluitで包んで実行する
+#
+# luitは擬似端末を挟んでアプリの入出力をUTF-8と指定エンコーディングの間で双方向に変換する。
+# そのため`euc-cat`のような一方向の変換では扱えない対話型アプリ(エディタやページャなど)でも
+# 文字化けせずに使える
+#
+# @param $1 実行するコマンド
+# @param $@ コマンドに渡す引数
+#
+# 例:
+# $ euc-run vim euc.txt
+# $ euc-run less euc.txt
+function euc-run() {
+    if [ $# -eq 0 ]; then
+        echo "Usage: euc-run CMD [ARGS...]"
+        return 1
+    fi
+
+    if ! type luit &>/dev/null; then
+        echo "euc-run: luit command not found" >&2
+        echo "euc-run: luit is included in nix/flake.nix of this dotfiles. Run ./install.sh to install it" >&2
+        return 1
+    fi
+
+    luit -encoding EUC-JP -- "$@"
+}
+
+#
 # @brief カレントディレクトリ以下の今日以前で最も今日に近いISO 8601の日付形式のディレクトリ名を返す
 #
 # 例1: 今日の日付のディレクトリがない場合
