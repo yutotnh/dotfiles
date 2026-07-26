@@ -85,63 +85,10 @@ function clip() {
 }
 
 #
-# @brief EUC-JPのテキストをUTF-8に変換して標準出力に出力する
-#
-# VS Codeの統合ターミナル(xterm.js)はUTF-8デコード固定で、端末側のエンコーディングを
-# 変更する設定が存在しない。そのためEUC-JPのファイルをそのまま`cat`すると文字化けする
-#
-# 変換にnkfを使うのは、実務のEUC-JPファイルに頻出するNEC特殊文字(①、№)やIBM拡張文字を
-# 正しく扱えるのがnkfだけのため
-#   - `iconv -f EUC-JP`    : NEC特殊文字・IBM拡張文字を`illegal input sequence`で撥ねる。
-#                            ①が1文字混ざっているだけでファイル全体が読めなくなる
-#   - `iconv -f EUC-JP-MS` : 拡張文字は通るが、波ダッシュ(0xA1C1)をU+301Cではなく
-#                            全角チルダU+FF5Eに変換してしまう
-#   - `nkf -E -w -x`       : 拡張文字を扱え、かつ波ダッシュもU+301Cのままになる
-#
-# `-x`は半角カナの全角化(`ﾃﾞｰﾀ`が`データ`になる)を抑止するために必要
-#
-# nkfが無い環境ではiconvにフォールバックする。その場合、拡張文字で全滅するのを避けるため
-# EUC-JPではなくEUC-JP-MSを使い、波ダッシュが全角チルダになる点だけ妥協する
-#
-# @param $@ EUC-JPのファイル(省略した場合は標準入力を変換する)
-#
-# 例:
-# $ euc-cat euc.txt
-# $ cat euc.txt | euc-cat
-function euc-cat() {
-    local -a converter
-    if type nkf &>/dev/null; then
-        converter=(nkf -E -w -x)
-    elif type iconv &>/dev/null; then
-        converter=(iconv -f EUC-JP-MS -t UTF-8)
-    else
-        echo "euc-cat: neither nkf nor iconv command found" >&2
-        return 1
-    fi
-
-    # 引数が無い場合は標準入力をそのまま処理させる
-    if [ $# -eq 0 ]; then
-        "${converter[@]}"
-        return
-    fi
-
-    local file
-    for file in "$@"; do
-        # nkfは`--`をセパレータとして解釈しない。`-`始まりの引数は不明なオプションとして
-        # 黙って読み飛ばした上で終了コード0を返してしまうため、`./`を付けてファイル名だと明示する
-        if [[ "${file}" == -* ]]; then
-            file="./${file}"
-        fi
-
-        "${converter[@]}" "${file}" || return
-    done
-}
-
-#
 # @brief EUC-JPで入出力する対話型アプリをluitで包んで実行する
 #
 # luitは擬似端末を挟んでアプリの入出力をUTF-8と指定エンコーディングの間で双方向に変換する。
-# そのため`euc-cat`のような一方向の変換では扱えない対話型アプリ(エディタやページャなど)でも
+# そのため`nkf`のような一方向の変換では扱えない対話型アプリ(エディタやページャなど)でも
 # 文字化けせずに使える
 #
 # @param $1 実行するコマンド
