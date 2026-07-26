@@ -90,8 +90,18 @@ function clip() {
 # VS Codeの統合ターミナル(xterm.js)はUTF-8デコード固定で、端末側のエンコーディングを
 # 変更する設定が存在しない。そのためEUC-JPのファイルをそのまま`cat`すると文字化けする
 #
-# 変換にnkfではなくiconvを使うのは、`nkf -w`が半角カナを勝手に全角化してしまい
-# (`ﾃﾞｰﾀ`が`データ`になる)、元のテキストに忠実な変換にならないため
+# 変換にnkfを使うのは、実務のEUC-JPファイルに頻出するNEC特殊文字(①、№)やIBM拡張文字を
+# 正しく扱えるのがnkfだけのため
+#   - `iconv -f EUC-JP`    : NEC特殊文字・IBM拡張文字を`illegal input sequence`で撥ねる。
+#                            ①が1文字混ざっているだけでファイル全体が読めなくなる
+#   - `iconv -f EUC-JP-MS` : 拡張文字は通るが、波ダッシュ(0xA1C1)をU+301Cではなく
+#                            全角チルダU+FF5Eに変換してしまう
+#   - `nkf -E -w -x`       : 拡張文字を扱え、かつ波ダッシュもU+301Cのままになる
+#
+# `-x`は半角カナの全角化(`ﾃﾞｰﾀ`が`データ`になる)を抑止するために必要
+#
+# nkfが無い環境ではiconvにフォールバックする。その場合、拡張文字で全滅するのを避けるため
+# EUC-JPではなくEUC-JP-MSを使い、波ダッシュが全角チルダになる点だけ妥協する
 #
 # @param $@ EUC-JPのファイル(省略した場合は標準入力を変換する)
 #
@@ -99,21 +109,31 @@ function clip() {
 # $ euc-cat euc.txt
 # $ cat euc.txt | euc-cat
 function euc-cat() {
-    if ! type iconv &>/dev/null; then
-        echo "euc-cat: iconv command not found" >&2
+    local -a converter
+    if type nkf &>/dev/null; then
+        converter=(nkf -E -w -x)
+    elif type iconv &>/dev/null; then
+        converter=(iconv -f EUC-JP-MS -t UTF-8)
+    else
+        echo "euc-cat: neither nkf nor iconv command found" >&2
         return 1
     fi
 
-    # 引数が無い場合は標準入力をそのままiconvに処理させる
+    # 引数が無い場合は標準入力をそのまま処理させる
     if [ $# -eq 0 ]; then
-        iconv -f EUC-JP -t UTF-8
+        "${converter[@]}"
         return
     fi
 
     local file
     for file in "$@"; do
-        # `-`始まりのファイル名をオプションと解釈させないため`--`で区切る
-        iconv -f EUC-JP -t UTF-8 -- "${file}" || return
+        # nkfは`--`をセパレータとして解釈しない。`-`始まりの引数は不明なオプションとして
+        # 黙って読み飛ばした上で終了コード0を返してしまうため、`./`を付けてファイル名だと明示する
+        if [[ "${file}" == -* ]]; then
+            file="./${file}"
+        fi
+
+        "${converter[@]}" "${file}" || return
     done
 }
 
