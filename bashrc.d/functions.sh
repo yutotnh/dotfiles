@@ -85,6 +85,42 @@ function clip() {
 }
 
 #
+# @brief EUC-JPで入出力する対話型アプリをluitで包んで実行する
+#
+# VS Codeの統合ターミナル(xterm.js)はUTF-8デコード固定で、端末側のエンコーディングを
+# 変更する設定が存在しない(参考: https://github.com/microsoft/vscode/issues/45520 )。
+# そのためEUC-JPを入出力する対話型アプリ(エディタやページャなど)をそのまま動かすと
+# 文字化けする
+#
+# luitは擬似端末を挟んでアプリの入出力をUTF-8と指定エンコーディングの間で双方向に変換する。
+# `nkf`のような一方向の変換では扱えない対話型アプリでも、これを介せば文字化けせずに使える
+#
+# ただしluitはNEC特殊文字(①、№)・IBM拡張文字を正しく変換できない(`①`が`ⴡ`になる)。
+# luitがISO 2022で登録された文字集合(JIS X 0208 / JIS X 0212)しか持たないためで回避できない。
+# これらの文字を含むファイルを閲覧するだけなら`nkf -E -w -x`や`lv`を使うこと
+#
+# @param $1 実行するコマンド
+# @param $@ コマンドに渡す引数
+#
+# 例:
+# $ euc-run vim euc.txt
+# $ euc-run less euc.txt
+function euc-run() {
+    if [ $# -eq 0 ]; then
+        echo "Usage: euc-run CMD [ARGS...]"
+        return 1
+    fi
+
+    if ! type luit &>/dev/null; then
+        echo "euc-run: luit command not found" >&2
+        echo "euc-run: luit is included in nix/flake.nix of this dotfiles. Run ./install.sh to install it" >&2
+        return 1
+    fi
+
+    luit -encoding EUC-JP -- "$@"
+}
+
+#
 # @brief カレントディレクトリ以下の今日以前で最も今日に近いISO 8601の日付形式のディレクトリ名を返す
 #
 # 例1: 今日の日付のディレクトリがない場合
