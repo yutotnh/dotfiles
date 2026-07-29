@@ -11,7 +11,11 @@
   };
 
   outputs =
-    { self, nixpkgs, nvm-src }:
+    {
+      self,
+      nixpkgs,
+      nvm-src,
+    }:
     let
       forAllSystems =
         f:
