@@ -3,8 +3,19 @@
 
   inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
 
+  # nvmはnixpkgsにパッケージが存在しないため、本体のリポジトリから直接取得して
+  # 自前でビルドする
+  inputs.nvm-src = {
+    url = "github:nvm-sh/nvm/v0.40.6";
+    flake = false;
+  };
+
   outputs =
-    { self, nixpkgs }:
+    {
+      self,
+      nixpkgs,
+      nvm-src,
+    }:
     let
       forAllSystems =
         f:
@@ -40,6 +51,17 @@
               lv
               msedit
               nkf
+              # nvmはnixpkgsにパッケージが存在しないため、nvm-src(nvm-sh/nvm)から自前でビルドする
+              (stdenvNoCC.mkDerivation {
+                pname = "nvm";
+                version = "0.40.6";
+                src = nvm-src;
+                dontBuild = true;
+                installPhase = ''
+                  mkdir -p "$out/share/nvm"
+                  cp nvm.sh nvm-exec bash_completion "$out/share/nvm/"
+                '';
+              })
               ripgrep
               rustup
               sourceHighlight
