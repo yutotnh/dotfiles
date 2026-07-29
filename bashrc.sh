@@ -29,6 +29,17 @@ if type fzf &>/dev/null; then
     eval "$(fzf --bash)"
 fi
 
+# nvmはコマンドとしてではなくシェル関数として提供されるため、`type nvm`ではなく
+# nvm.shの有無で導入判定する
+if [[ -r ~/.nix-profile/share/nvm/nvm.sh ]]; then
+    export NVM_DIR="${HOME}/.nvm"
+    source ~/.nix-profile/share/nvm/nvm.sh
+
+    if [[ -r ~/.nix-profile/share/nvm/bash_completion ]]; then
+        source ~/.nix-profile/share/nvm/bash_completion
+    fi
+fi
+
 if type git &>/dev/null; then
     # gitの補完はnix profileでインストールした場合は他の補完を有効にするときに一緒に有効になる
     # そのため、ここではnix profileのgitの補完は有効にしない
