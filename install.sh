@@ -51,8 +51,42 @@ fi
 
 ##
 # @brief nix/flake.nix に記載しているコマンド一式をインストールする(既にインストール済みなら最新化する)
-if nix profile list 2>/dev/null | grep -qF "${SCRIPT_DIRECTORY}"; then
-    nix profile upgrade '.*'
+# Nix 2.34 では nix profile の各サブコマンドの位置引数が正規表現ではなく「要素名」として
+# 解釈されるようになったため、要素名とflake URLを nix profile list から取り出して扱う
+# nix profile list はパイプに繋いでも(NIX_USER_CONF_FILESやNO_COLORに関わらず)色を付けるため、
+# ANSIエスケープを除去してから解析する
+DOTFILES_PROFILE_ELEMENTS="$(nix profile list 2>/dev/null | awk -v dir="${SCRIPT_DIRECTORY}" '
+    { gsub(/\033\[[0-9;]*m/, "") }
+    /^Name:/ { name = $2 }
+    /^Original flake URL:/ && index($0, dir) { print name, $4 }
+')"
+
+# 更新すべき要素と、入れ直しが必要な古いプロファイルを仕分ける
+CURRENT_ELEMENTS=""
+LEGACY_ELEMENTS=""
+while read -r ELEMENT_NAME ELEMENT_URL; do
+    [[ -z "${ELEMENT_NAME}" ]] && continue
+
+    if [[ "${ELEMENT_URL}" == *"?dir=nix"* ]]; then
+        CURRENT_ELEMENTS+="${ELEMENT_NAME} "
+    else
+        # flake.nix をリポジトリルートから nix/ へ移動する前にインストールしたプロファイルは
+        # 現存しないルートの flake.nix を参照しており upgrade できないため、削除して入れ直す
+        LEGACY_ELEMENTS+="${ELEMENT_NAME} "
+    fi
+done <<<"${DOTFILES_PROFILE_ELEMENTS}"
+
+if [[ -n "${LEGACY_ELEMENTS}" ]]; then
+    # 要素名は空白を含まないため、意図的に単語分割させて複数要素を渡す
+    # shellcheck disable=SC2086
+    nix profile remove ${LEGACY_ELEMENTS}
+fi
+
+if [[ -n "${CURRENT_ELEMENTS}" ]]; then
+    # --all では利用者が自分で `nix profile install` した無関係なパッケージまで更新して
+    # しまうため、このdotfilesが入れた要素だけを名前で指定して更新する
+    # shellcheck disable=SC2086
+    nix profile upgrade ${CURRENT_ELEMENTS}
 else
     nix profile install "${SCRIPT_DIRECTORY}/nix#default"
 fi

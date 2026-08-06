@@ -65,6 +65,7 @@
     "glibc",
     "gpgsign",
     "groupinstall",
+    "gsub",
     "guicursor",
     "guix",
     "haxe",
