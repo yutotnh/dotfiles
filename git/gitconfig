@@ -1,7 +1,3 @@
-[user]
-	name = yutotnh
-	email = 57719497+yutotnh@users.noreply.github.com
-
 [init]
 	defaultBranch = main
 
@@ -31,13 +27,11 @@
 	s = status --short # shortの情報で十分な場合が多いため、--shortをデフォルトにする
 	c = commit
 
-[commit]
-	gpgsign = true
-
-[tag]
-	gpgsign = true
-
 [include]
-	# リポジトリごとに設定を変えたい場合がある
-	# そのためリポジトリごとに設定ファイルを作成し、includeで読み込む
+	# マシンごとに異なる設定(user.name, user.email, 署名の有無など)を書くためのファイル
+	# 共有マシンの共有アカウントでも本ファイルを読み込むため、個人のidentityや署名の設定は
+	# 本ファイルに書かず、gitconfig.localに分離している(gitconfig.local.exampleを参照)
+	# GIT_CONFIG_GLOBALで本ファイルを指定すると~/.gitconfigは読み込まれなくなるため、
+	# identityを設定するには、gitconfig.localを作成する必要がある
+	# ファイルが存在しない場合は、何も読み込まれずエラーにもならない
 	path = gitconfig.local
