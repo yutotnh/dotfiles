@@ -14,5 +14,11 @@ runs:
         # Nixと、Nix profileでインストールしたコマンド(の内1つ)が存在していないこと確認する
         if bash -c 'source "${HOME}/.bashrc" && type nix' &>/dev/null; then false; fi
         if bash -c 'source "${HOME}/.bashrc" && type bat' &>/dev/null; then false; fi
+        # ~/.bashrcからbashrc.shを読み込む処理が除かれていることを確認する
+        # (上のコマンド未導入の確認だけでは、フックが残っていても通ってしまう)
+        if grep -qF "$(pwd)/bashrc.sh" "${HOME}/.bashrc"; then
+          echo "~/.bashrc に bashrc.sh を読み込む処理が残っています"
+          false
+        fi
         # エイリアスが設定されないことを確認する
         if bash -c 'source "${HOME}/.bashrc" && alias cat' &>/dev/null; then false; fi

@@ -58,22 +58,6 @@ else
 fi
 
 ##
-# @brief Rust の環境をセットアップする
-# nixpkgsのrustupパッケージはrustup-initを提供せず、rustupとそのshim(cargo, rustcなど)のみを
-# 提供するため、rustup-initではなくrustup自体でデフォルトツールチェインを導入する
-# shimはツールチェインが入っていないと動かないため、この処理が必要になる
-if type rustup &>/dev/null; then
-    # デフォルトツールチェインが未設定のときだけ導入する
-    # 設定済みなら `rustup default` はネットワークアクセス無しに即座に終わるため、
-    # install.sh を再実行したときの待ち時間が増えない
-    if ! rustup default &>/dev/null; then
-        rustup default stable
-    fi
-else
-    echo "Can not setup Rust environment." >&2
-fi
-
-##
 # @brief ~/.bashrcにbashrc.sh を読み込む処理を追加する
 if [[ -r "${HOME}/.bashrc" ]]; then
 
@@ -86,4 +70,22 @@ if [[ -r "${HOME}/.bashrc" ]]; then
 EOF
     fi
 
+fi
+
+##
+# @brief Rust の環境をセットアップする
+# デフォルトツールチェインの導入にはネットワークアクセスが必要で、失敗すると`set -e`でここで止まる
+# 失敗しても~/.bashrcへの読み込み処理の追加までは完了させたいため、本スクリプトの最後に置いている
+# nixpkgsのrustupパッケージはrustup-initを提供せず、rustupとそのshim(cargo, rustcなど)のみを
+# 提供するため、rustup-initではなくrustup自体でデフォルトツールチェインを導入する
+# shimはツールチェインが入っていないと動かないため、この処理が必要になる
+if type rustup &>/dev/null; then
+    # デフォルトツールチェインが未設定のときだけ導入する
+    # 設定済みなら `rustup default` はネットワークアクセス無しに即座に終わるため、
+    # install.sh を再実行したときの待ち時間が増えない
+    if ! rustup default &>/dev/null; then
+        rustup default stable
+    fi
+else
+    echo "Can not setup Rust environment." >&2
 fi
