@@ -54,7 +54,8 @@
               # nvmはnixpkgsにパッケージが存在しないため、nvm-src(nvm-sh/nvm)から自前でビルドする
               (stdenvNoCC.mkDerivation {
                 pname = "nvm";
-                version = "0.40.6";
+                # バージョンはnvm-srcのpackage.jsonから取得し、inputsのタグとの二重管理を避ける
+                version = (builtins.fromJSON (builtins.readFile "${nvm-src}/package.json")).version;
                 src = nvm-src;
                 dontBuild = true;
                 installPhase = ''
@@ -70,7 +71,7 @@
               vim
               zoxide
             ]
-            ++ lib.optionals stdenv.isLinux [
+            ++ lib.optionals stdenv.hostPlatform.isLinux [
               glibcLocales
               herdr
               luit

@@ -2,6 +2,7 @@ name: "Spell"
 
 on:
   push:
+    branches: ["main"]
   pull_request:
   workflow_dispatch:
 
@@ -22,7 +23,7 @@ jobs:
         uses: actions/setup-node@v7
         with:
           node-version: "lts/*"
-      - uses: reviewdog/action-setup@v1
+      - uses: reviewdog/action-setup@d8a7baabd7f3e8544ee4dbde3ee41d0011c3a93f # v1
       - run: npm install -g cspell
       - name: Spell check with reviewdog
         if: ${{ github.event_name == 'pull_request' }}
@@ -44,7 +45,7 @@ jobs:
         uses: actions/setup-node@v7
         with:
           node-version: "lts/*"
-      - uses: reviewdog/action-setup@v1
+      - uses: reviewdog/action-setup@d8a7baabd7f3e8544ee4dbde3ee41d0011c3a93f # v1
       - run: npm install -g cspell
       - name: Spell check of file name
         # ファイル名のチェックなのでReviewdog は使えない

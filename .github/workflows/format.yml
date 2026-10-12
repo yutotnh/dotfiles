@@ -2,6 +2,7 @@ name: Format
 
 on:
   push:
+    branches: ["main"]
   pull_request:
   workflow_dispatch:
 
@@ -19,7 +20,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v7
       - name: Run the sh-checker
-        uses: luizm/action-sh-checker@v0.10.0
+        uses: luizm/action-sh-checker@883217215b11c1fabbf00eb1a9a041f62d74c744 # v0.10.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SHELLCHECK_OPTS: --exclude=SC1090,SC1091,SC2046
