@@ -31,29 +31,55 @@ else
         _blue=""
     fi
 
-    function _color_by_exit_code() {
+    # プロンプトを表示する直前に実行する関数。PROMPT_COMMANDに登録する
+    #
+    # PS1内で`$(...)`(コマンド置換)を使って終了コードや時刻を作ると、先に実行したコマンド置換が
+    # `$?`を上書きするため、後ろのコマンド置換が直前のコマンドの終了コードを参照できなくなる。
+    # そのため、PROMPT_COMMANDの先頭でこの関数を実行して`$?`を退避し、結果は変数に入れて
+    # PS1から参照する。変数への代入だけで済ませることで、プロンプトごとのforkも避けられる
+    function _prompt_precmd() {
+        # 他の処理で`$?`が変わる前に、最初に退避する
         local exit_code="${?}"
 
-        # macのrootだと、echo -nでの改行なしができないため、printfで行う
-        # `print %s ${_green}`だと、\001, \002がうまく機能しないので、直接printfしている
+        # 終了コードが0: 緑色、それ以外: 赤色
+        # PS1に変数として埋め込む場合、変数の中身は"\001"などのエスケープが再解釈されないため、
+        # printf -vで実際の制御文字に変換してから保持する
+        # shellcheck disable=SC2059
         if [ "${exit_code}" -eq "0" ]; then
-            # shellcheck disable=SC2059
-            printf "${_green}"
+            printf -v _PROMPT_COLOR "${_green}"
         else
-            # shellcheck disable=SC2059
-            printf "${_red}"
+            printf -v _PROMPT_COLOR "${_red}"
         fi
+
+        # ISO 8601の拡張形式(例: 2000-01-01T00:00:00+09:00)の日時
+        # strftimeの%zは+0900のようにコロン無しで出力されるため、末尾2文字の手前にコロンを入れる
+        printf -v _PROMPT_TIME '%(%Y-%m-%dT%H:%M:%S%z)T' -1
+        _PROMPT_TIME="${_PROMPT_TIME:0:-2}:${_PROMPT_TIME: -2}"
     }
+
+    # `$?`を正しく参照するため、他のPROMPT_COMMANDよりも前(先頭)で実行する
+    # bashrc.shを再読み込みしたときに二重に登録されると、2回目の実行時に`$?`が0になるため、
+    # 登録済みのときは追加しない
+    if [[ "${PROMPT_COMMAND[*]:-}" != *_prompt_precmd* ]]; then
+        if [[ "$(declare -p PROMPT_COMMAND 2>/dev/null)" == "declare -a"* ]]; then
+            # bash 5.1以降はPROMPT_COMMANDを配列として扱える
+            PROMPT_COMMAND=(_prompt_precmd "${PROMPT_COMMAND[@]}")
+        else
+            # 配列でない(bash 5.0以前)ときの分岐なので、配列としての扱いに関する警告は該当しない
+            # shellcheck disable=SC2178,SC2128
+            PROMPT_COMMAND="_prompt_precmd${PROMPT_COMMAND:+;${PROMPT_COMMAND}}"
+        fi
+    fi
 
     # 以下のようなプロンプトにする
     #                     # 直前のコマンドとプロンプトの境目がわかりやすいように空行を入れる
-    #   user@host 2000-01-01T00:00:00
+    #   user@host 2000-01-01T00:00:00+09:00
     #   full_path
     #   $                 # 終了コードが0: 緑色、それ以外: 赤色
     export PS1="\n"
-    export PS1+="${_green}\u${_reset}@${_green}\h${_reset} \D{%Y-%m-%dT%H:%M:%S}\n"
+    export PS1+="${_green}\u${_reset}@${_green}\h${_reset} "'${_PROMPT_TIME}'"\n"
     export PS1+="${_blue}\w${_reset}\n"
-    export PS1+='$(_color_by_exit_code)\$'"${_reset} "
+    export PS1+='${_PROMPT_COLOR}\$'"${_reset} "
 fi
 
 if type zoxide &>/dev/null; then
