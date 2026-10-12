@@ -51,7 +51,7 @@ else
     #   full_path
     #   $                 # 終了コードが0: 緑色、それ以外: 赤色
     export PS1="\n"
-    export PS1+="${_green}\u${_reset}@${_green}\h${_reset} \D{%Y-%m-%dT%H:T%M:%S}\n"
+    export PS1+="${_green}\u${_reset}@${_green}\h${_reset} \D{%Y-%m-%dT%H:%M:%S}\n"
     export PS1+="${_blue}\w${_reset}\n"
     export PS1+='$(_color_by_exit_code)\$'"${_reset} "
 fi
@@ -195,7 +195,8 @@ if type glow &>/dev/null; then
     export GLOW_CONFIG_HOME="${DOTFILES_DIRECTORY}/glow"
 fi
 
-if type gpg &>/dev/null; then
+# 標準入力が端末でないとき、`tty`は"not a tty"という文字列を出力してしまうため、端末のときだけ設定する
+if type gpg &>/dev/null && [[ -t 0 ]]; then
     GPG_TTY=$(tty)
     export GPG_TTY
 fi

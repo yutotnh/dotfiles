@@ -26,7 +26,9 @@ if type nix &>/dev/null; then
 fi
 
 if type fzf &>/dev/null; then
-    eval "$(fzf --bash)"
+    # `--bash`はfzf 0.48以降でのみ対応している
+    # 共有マシンのfzfが古い場合にエラーを出さないよう、標準エラー出力は捨てる
+    eval "$(fzf --bash 2>/dev/null)"
 fi
 
 # nvmはコマンドとしてではなくシェル関数として提供されるため、`type nvm`ではなく
@@ -53,7 +55,7 @@ if type git &>/dev/null; then
     fi
 fi
 
-shopt -s autocd      # cdコマンドに引数がないときに、カレントディレクトリを表示する
+shopt -s autocd      # ディレクトリ名だけを入力したときに、そのディレクトリへcdする
 shopt -s cdable_vars # cdコマンドに変数名を指定できるようにする
 shopt -s cdspell     # cdコマンドの引数が間違っているときに、正しい候補を表示する
 shopt -s dirspell    # ディレクトリ名のスペルミスを訂正する

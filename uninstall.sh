@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# 注意: Linuxでは/nix以下を、macOSではNixのdaemonとボリュームを丸ごと削除する
+#       本dotfiles以外の用途でNixを使っている環境では実行しないこと
 SCRIPT_DIRECTORY="$(dirname "$(realpath "${BASH_SOURCE:-0}")")"
 
 # nix.confをdotfiles内で管理する
@@ -18,10 +20,19 @@ if type nix &>/dev/null; then
 fi
 
 if [ -r "${HOME}/.bashrc" ]; then
-    BASHRC_SH_LINE_NO=$(grep -nF "[[ -r \"${SCRIPT_DIRECTORY}/bashrc.sh\" ]] && source \"${SCRIPT_DIRECTORY}/bashrc.sh\"" "${HOME}/.bashrc" | sed -e 's/:.*//g')
-    if [[ "${BASHRC_SH_LINE_NO}" =~ ^[0-9]+$ ]] && [[ "${BASHRC_SH_LINE_NO}" -gt 0 ]]; then
-        sed -i "${BASHRC_SH_LINE_NO}d" "${HOME}/.bashrc"
+    BASHRC_HOOK="[[ -r \"${SCRIPT_DIRECTORY}/bashrc.sh\" ]] && source \"${SCRIPT_DIRECTORY}/bashrc.sh\""
+
+    # GNU sedとBSD sedで`sed -i`の引数の渡し方が異なり、macOSでは失敗するため、sedを使わずにgrepで該当行を除く
+    # grepは出力が0行のときに終了コード1を返すが、これは正常(.bashrcがフックのみだった場合)なので許容する
+    # 終了コード2以上のときは.bashrcを上書きしない(読み込みエラーで.bashrcを空にしないため)
+    BASHRC_TMP="$(mktemp)"
+    GREP_STATUS=0
+    grep -vxF "${BASHRC_HOOK}" "${HOME}/.bashrc" >"${BASHRC_TMP}" || GREP_STATUS=$?
+    if [[ "${GREP_STATUS}" -le 1 ]]; then
+        # mvではなくcatで上書きすることで、.bashrcがシンボリックリンクでもリンクを壊さない
+        cat "${BASHRC_TMP}" >"${HOME}/.bashrc"
     fi
+    rm -f "${BASHRC_TMP}"
 fi
 
 ##
