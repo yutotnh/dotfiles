@@ -1,0 +1,20 @@
+# git/gitconfig.local のひな形
+#
+# 次のコマンドでコピーし、自分の値に書き換える
+#   cp git/gitconfig.local.example git/gitconfig.local
+#
+# gitconfig.local は.gitignoreで管理対象外にしている
+
+[user]
+	name = Your Name
+	email = you@example.com
+	# 署名に使う鍵を指定する場合(省略するとuser.emailに対応する鍵が使われる)
+	# signingkey = XXXXXXXXXXXXXXXX
+
+# コミットとタグにGPG署名する場合(署名できる鍵がある環境でのみ有効にすること)
+# 鍵が無い環境で有効にすると、すべてのコミットが失敗する
+[commit]
+	gpgsign = true
+
+[tag]
+	gpgsign = true

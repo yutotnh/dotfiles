@@ -10,6 +10,16 @@ sudo true
 exec bash -l
 ```
 
+## git の設定
+
+`git/gitconfig` を `GIT_CONFIG_GLOBAL` で参照するため、`~/.gitconfig` は読み込まれない
+
+`user.name` や `user.email`、コミットの署名など、マシンごとに異なる設定は `git/gitconfig.local` に書く
+
+```bash
+cp git/gitconfig.local.example git/gitconfig.local
+```
+
 ## Update
 
 ```bash
